@@ -1,0 +1,229 @@
+    body {
+        font-family: Arial, sans-serif;
+        color: #333;
+    }
+
+    .container {
+        position: relative;
+    }
+
+    .search-container {
+        max-width: 300px;
+        position: relative;
+    }
+
+    .search-input {
+        padding-right: 40px;
+        border-radius: 20px;
+        border: 1px solid #ddd;
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        border-color: #80bdff;
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+    }
+
+    .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-top: 5px;
+        display: none;
+        z-index: 1002;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .search-result-item {
+        padding: 10px 15px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .search-result-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .search-result-item:last-child {
+        border-bottom: none;
+    }
+
+    .highlight {
+        background-color: #fff3cd;
+        padding: 0 2px;
+        border-radius: 2px;
+    }
+
+    /* Pasek dostępności */
+    .accessibility-bar {
+        background: rgba(219, 0, 0, 0.849);
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .accessibility-bar .btn {
+        margin: 0 2px;
+    }
+
+    .accessibility-bar .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* Nagłówek */
+    .header {
+        background: #f8f9fa;
+        padding: 1rem 0;
+        border-bottom: 2px solid rgba(151, 0, 0, 0.849);
+    }
+
+    #tytul_strony, #nazwa_instytucji {
+        font-size: x-large;
+        font-weight: 400;
+    }
+
+    #tytul_strony {
+        color: gray;
+    }
+
+    #nazwa_instytucji {
+        color: red;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        background: #f8f9fa;
+        min-height: calc(100vh - 100px);
+        padding: 1rem;
+        position: relative;
+        z-index: 1000;
+    }
+
+    .category-list {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+    }
+
+    .category-list ul {
+        padding-left: 1.5rem;
+    }
+
+    .category-item {
+        position: relative;
+        margin: 4px 0;
+        padding: 8px 0;
+        transform: translateY(0);
+        transition: transform 0.2s ease;
+    }
+
+    .category-item:hover {
+        transform: translateY(-2px);
+    }
+
+    .category-item::after {
+        content: '';
+        position: absolute;
+        left: -10px;
+        right: -10px;
+        top: -5px;
+        bottom: -5px;
+        background: rgba(0,123,255,0.04);
+        border-radius: 8px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+    }
+
+    .category-item:hover::after {
+        opacity: 1;
+    }
+
+    .category-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        color: #333;
+        text-decoration: none;
+        background: #f8f9fa;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+    .category-link:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+        border-color: #dee2e6;
+    }
+
+    .arrow {
+        display: inline-block;
+        font-size: 20px;
+        transition: transform 0.3s ease;
+    }
+
+    .category-item:hover .arrow {
+        transform: rotate(90deg);
+    }
+
+    .subcategory-list {
+        position: absolute;
+        left: calc(100% + 10px);
+        top: -8px;
+        min-width: 220px;
+        list-style: none;
+        padding: 8px 0;
+        margin: 0;
+        background: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-20px);
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 1001;
+    }
+
+    .category-item:hover .subcategory-list {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+    }
+
+    .subcategory-link {
+        display: block;
+        padding: 8px 20px;
+        color: #333;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .subcategory-link:hover {
+        background: #f8f9fa;
+        padding-left: 25px;
+        color: #007bff;
+    }
+    #login-btn{
+        background: none ;
+        border: none;
+    }
+    #login-btn:hover{
+        color: lightgray;
+    }
