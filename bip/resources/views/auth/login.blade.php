@@ -33,7 +33,7 @@
                                 </button>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Zaloguj</button>
+                        <button type="submit" class="btn btn-sm btn-danger w-100">Zaloguj</button>
                     </form>
                 </div>
             </div>

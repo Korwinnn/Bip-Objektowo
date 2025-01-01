@@ -7,9 +7,6 @@
         </div>
         <div class="card-body">
             <p>Witamy w Biuletynie Informacji Publicznej.</p>
-            @if(auth()->check())
-                <a href="{{ route('categories.create') }}" class="btn btn-primary">Dodaj nową kategorię</a>
-            @endif
         </div>
     </div>
 @endsection

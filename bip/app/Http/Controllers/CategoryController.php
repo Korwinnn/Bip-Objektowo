@@ -7,12 +7,8 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    private function getCategories()
-    {
-        return Category::with('children')
-            ->whereNull('parent_id')
-            ->get();
-    }
+    private $categories;
+
     public function index()
     {
         $categories = Category::with('children')
@@ -21,10 +17,10 @@ class CategoryController extends Controller
         return view('categories.index', compact('categories'));
     }
 
+
     public function show(Category $category)
     {
-        $categories = $this->getCategories(); // Dodane
-        return view('categories.show', compact('category', 'categories'));
+        return view('categories.show', compact('category'));
     }
 
     public function create()
@@ -42,7 +38,8 @@ class CategoryController extends Controller
         ]);
 
         Category::create($validated);
-        return redirect()->route('categories.index');
+        // zmiana z route('categories.index') na route('dashboard')
+        return redirect()->route('admin.dashboard')->with('success', 'Kategoria została dodana');
     }
 
     public function edit(Category $category)
@@ -58,15 +55,23 @@ class CategoryController extends Controller
             'content' => 'nullable',
             'parent_id' => 'nullable|exists:categories,id'
         ]);
-
-        $category->update($validated);
-        return redirect()->route('categories.index');
+        
+        try {
+            $category->update($validated);
+            return redirect()
+                ->route('categories.show', $category)
+                ->with('success', 'Kategoria została zaktualizowana');
+        } catch (\Exception $e) {
+            \Log::error('Błąd aktualizacji kategorii: ' . $e->getMessage());
+            return back()
+                ->with('error', 'Wystąpił błąd podczas aktualizacji kategorii');
+        }
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect()->route('categories.index');
+        return redirect()->route('admin.dashboard');
     }
 
     public function search(Request $request)

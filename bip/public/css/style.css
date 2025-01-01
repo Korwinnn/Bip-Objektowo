@@ -98,11 +98,11 @@
     }
 
     #tytul_strony {
-        color: gray;
+        color: #333;
     }
 
     #nazwa_instytucji {
-        color: red;
+        color: rgba(219, 0, 0, 0.849);
     }
 
     /* Sidebar */
@@ -218,12 +218,48 @@
     .subcategory-link:hover {
         background: #f8f9fa;
         padding-left: 25px;
-        color: #007bff;
+        color: #e12727;
     }
     #login-btn{
         background: none ;
         border: none;
     }
     #login-btn:hover{
-        color: lightgray;
+        background-color: #a81d1d;
     }
+
+    #add-category-btn{
+        background-color: #22CB00; 
+        color: white;
+    }
+    #logout-btn{
+        background-color: #e12727;
+        border: none;
+    }
+    #logout-btn:hover{
+        background-color: #a81d1d;
+    }
+    .sidebar {
+        position: relative;
+        padding-left: 20px; /* Aby odsunąć zawartość od paska */
+    }
+    
+    .sidebar::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px; /* Szerokość paska */
+        height: 100%; /* Długość od góry do dołu */
+        background-color: red; /* Kolor paska */
+    }
+    hr {
+        border: none;
+        border-top: 1px solid red; /* Kolor i styl linii */
+        margin: 0; /* Odstępy nad i pod linią */
+    }
+    .category-link:hover {
+        transform: translateX(5px);
+        color: red; /* Zmiana koloru obramowania na czerwony */
+    }
+    
