@@ -251,8 +251,9 @@
         left: 0;
         width: 5px; /* Szerokość paska */
         height: 100%; /* Długość od góry do dołu */
-        background-color: red; /* Kolor paska */
+        background-color: var(--before-color, red);
     }
+    
     hr {
         border: none;
         border-top: 1px solid red; /* Kolor i styl linii */
@@ -262,4 +263,98 @@
         transform: translateX(5px);
         color: red; /* Zmiana koloru obramowania na czerwony */
     }
-    
+    /* Kontener dla przycisków */
+.accessibility-controls {
+    border: 1px solid black;
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    padding: 0;
+    font-size: 0;
+    flex-wrap: wrap;
+}
+
+/* Podstawowe style dla wszystkich przycisków */
+#gray-btn , #white-black-btn, #black-white-btn, #yellow-black-btn, #black-yellow-btn, #normal-theme-btn, #size-up-btn, #size-down-btn, #standard-size-btn{
+    border-radius: 0;
+    margin: 0;
+    border: none;
+    font-size: 16px; /* Przywracamy rozmiar czcionki */
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 9%;
+}
+
+.btn:last-child {
+    border-right: none;
+}
+
+/* Style dla poszczególnych motywów */
+.theme-gray {
+    background-color: white;
+    border-right: 1px solid black;
+}
+
+.theme-gray i {
+    color: lightgray;
+}
+
+.theme-wb {
+    background-color: black;
+}
+
+.theme-wb i {
+    color: white;
+}
+
+.theme-yellow-black {
+    background-color: yellow;
+}
+
+.theme-yellow-black i {
+    color: black;
+}
+
+.theme-black-yellow {
+    background-color: black;
+}
+
+.theme-black-yellow i {
+    color: yellow;
+}
+
+.theme-red-white {
+    background-color: red;
+}
+
+.theme-red-white i {
+    color: white;
+}
+
+/* Style dla przycisków zmiany rozmiaru czcionki */
+.font-size-up,
+.font-size-down,
+.standard-font {
+    font-weight: 900;
+}
+
+/* Usuwa wszelkie możliwe marginesy i padding z ikon */
+.fa {
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+#gray-btn {
+    width: 15%;
+}
+#font-size-down-btn {
+    width: 14%;
+}
+.col-2{
+    display: flex ; 
+    justify-content: center ;
+}

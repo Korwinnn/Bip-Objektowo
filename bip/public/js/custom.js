@@ -29,64 +29,184 @@
         }
 
         var daltonisciEnabled = false;
-        function changeThemeGray() {
-            if (!daltonisciEnabled) {
-                document.documentElement.style.filter = 'grayscale(100%)';
-                daltonisciEnabled = true;
-            } else {
-                document.documentElement.style.filter = '';
-                daltonisciEnabled = false;
+        var kontrastEnabled = false;
+        var kontrast1Enabled = false;
+        var kontrast2Enabled = false;
+        var kontrast3Enabled = false;
+        var kontrast4Enabled = false;
+
+        function resetStyles() {
+            document.documentElement.style.filter = 'none';
+            document.documentElement.style.backgroundColor = '';
+            document.body.style.color = '';
+            document.getElementById('ins-logo').style.display = 'block';
+            document.getElementById('bip-logo').style.display = 'block';
+        
+            const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls *)');
+            elements.forEach(function (element) {
+                element.style.backgroundColor = '';
+                element.style.borderColor = '';
+                element.style.color = '';
+                element.classList.remove('kontrast-hover');
+            });
+        
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.style.setProperty('--before-color', 'red');
             }
+        
+            // Wyłącz wszystkie motywy
+            daltonisciEnabled = false;
+            kontrastEnabled = false;
+            kontrast1Enabled = false;
+            kontrast2Enabled = false;
+            kontrast3Enabled = false;
+            kontrast4Enabled = false;
         }
 
-        var kontrastEnabled = false;
+        function changeThemeGray() {
+            // Resetujemy style
+            resetStyles();
+            
+            // Ustawiamy filtr szarości
+            document.documentElement.style.filter = 'grayscale(100%)';
+            
+            
+            // Przywracamy obrazki logo
+            document.getElementById('ins-logo').style.display = 'block';
+            document.getElementById('bip-logo').style.display = 'block';
+            
+            // Ustawiamy flagę
+            daltonisciEnabled = true;
+        }
+
 
 function changeThemeYellowBlack() {
     if (!kontrastEnabled) {
-        // Aktywacja trybu wysokiego kontrastu
         document.documentElement.style.filter = 'none';
         document.documentElement.style.backgroundColor = 'black';
         document.body.style.color = 'yellow';
-        
-        var elements = document.querySelectorAll('*');
+        document.getElementById('ins-logo').style.display = 'none' ;
+        document.getElementById('bip-logo').style.display = 'none' ;
+        const stylesheet = document.styleSheets[0];
+    
+
+        const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls *)');
         elements.forEach(function(element) {
             element.style.backgroundColor = 'black';
             element.style.borderColor = 'yellow';
             element.style.color = 'yellow';
-            element.classList.add('kontrast-hover');
         });
-        
-        document.getElementById('wypisywanie_contentu').style.color = 'yellow';
-        document.getElementById('wypisywanie_contentu').addEventListener('DOMNodeInserted', changeTextColor);
+        const sidebar = document.querySelector('.sidebar');
+        sidebar.style.setProperty('--before-color', 'yellow');
+
+        document.getElementById('yellow-black-btn').addEventListener('DOMNodeInserted', changeTextColor);
         
         kontrastEnabled = true;
-    } else {
-        // Przywrócenie normalnego wyglądu
-        document.documentElement.style.filter = '';
-        document.documentElement.style.backgroundColor = '';
-        document.body.style.color = '';
-        
-        var elements = document.querySelectorAll('*');
-        elements.forEach(function(element) {
-            element.style.backgroundColor = '';
-            element.style.borderColor = '';
-            element.style.color = '';
-            element.classList.remove('kontrast-hover');
-        });
-        
-        document.getElementById('wypisywanie_contentu').style.color = '';
-        document.getElementById('wypisywanie_contentu').removeEventListener('DOMNodeInserted', changeTextColor);
-        
-        kontrastEnabled = false;
+    } 
+    else {
+        resetStyles();
     }
 }
 
-function changeTextColor(event) {
-    if (kontrastEnabled) {
-        var target = event.target;
-        target.style.color = 'yellow';
+
+
+function changeThemeBlackYellow() {
+    if (!kontrast1Enabled) {
+        document.documentElement.style.filter = 'none';
+        document.documentElement.style.backgroundColor = 'yellow';
+        document.body.style.color = 'black';
+        document.getElementById('ins-logo').style.display = 'none' ;
+        document.getElementById('bip-logo').style.display = 'none' ;
+        const stylesheet = document.styleSheets[0];
+    
+
+        const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls *)');
+        elements.forEach(function(element) {
+            element.style.backgroundColor = 'yellow';
+            element.style.borderColor = 'black';
+            element.style.color = 'black';
+        });
+        const sidebar = document.querySelector('.sidebar');
+        sidebar.style.setProperty('--before-color', 'black');
+
+        document.getElementById('black-yellow-btn').addEventListener('DOMNodeInserted', changeTextColor);
+        
+        kontrast1Enabled = true;
+    } 
+    else {
+        resetStyles();
     }
 }
+
+var kontrast2Enabled = false;
+
+function changeThemeWhiteBlack() {
+    if (!kontrast2Enabled) {
+        document.documentElement.style.filter = 'none';
+        document.documentElement.style.backgroundColor = 'white';
+        document.body.style.color = 'black';
+        document.getElementById('ins-logo').style.display = 'none' ;
+        document.getElementById('bip-logo').style.display = 'none' ;
+        const stylesheet = document.styleSheets[0];
+    
+
+        const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls *)');
+        elements.forEach(function(element) {
+            element.style.backgroundColor = 'white';
+            element.style.borderColor = 'black';
+            element.style.color = 'black';
+        });
+        const sidebar = document.querySelector('.sidebar');
+        sidebar.style.setProperty('--before-color', 'black');
+
+        document.getElementById('black-yellow-btn').addEventListener('DOMNodeInserted', changeTextColor);
+        
+        kontrast2Enabled = true;
+    } 
+    else {
+        resetStyles();
+    }
+}
+
+
+
+function changeThemeBlackWhite() {
+    if (!kontrast3Enabled) {
+        document.documentElement.style.filter = 'none';
+        document.documentElement.style.backgroundColor = 'black';
+        document.body.style.color = 'white';
+        document.getElementById('ins-logo').style.display = 'none' ;
+        document.getElementById('bip-logo').style.display = 'none' ;
+        const stylesheet = document.styleSheets[0];
+    
+
+        const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls *)');
+        elements.forEach(function(element) {
+            element.style.backgroundColor = 'black';
+            element.style.borderColor = 'white';
+            element.style.color = 'white';
+        });
+        const sidebar = document.querySelector('.sidebar');
+        sidebar.style.setProperty('--before-color', 'white');
+
+        document.getElementById('black-yellow-btn').addEventListener('DOMNodeInserted', changeTextColor);
+        
+        kontrast3Enabled = true;
+    } 
+    else {
+        resetStyles();
+    }
+}
+
+
+
+function changeThemeNormal() {
+    if (!kontrast4Enabled) {
+        resetStyles();
+    }
+}
+
         const searchInput = document.getElementById('searchInput');
         const searchResults = document.getElementById('searchResults');
 
