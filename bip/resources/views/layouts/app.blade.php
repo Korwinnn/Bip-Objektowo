@@ -10,22 +10,8 @@
     <script src="https://cdn.tiny.cloud/1/cnz8bjladd3d6xpxjdsc305h8oukukqwqcdswx4zxds5mp8a/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
-    <div class="header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-3">
-                    <img id="ins-logo" src="/images/logo-instytucji.png" alt="Logo instytucji" class="img-fluid">
-                </div>
-                <div class="col-6 text-left">
-                    <h1 id = "tytul_strony">Biuletyn Informacji Publicznej</h1>
-                    <h2 id = "nazwa_instytucji">PJ Agency</h2>
-                </div>
-                <div class="col-3 text-end">
-                    <img id="bip-logo" src="/images/logo-bip.png" alt="Logo BIP" class="img-fluid">
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    <x-institution-header />
 
     <div class="accessibility-bar">
         <div class="container">
@@ -94,11 +80,15 @@
         </div>
     </div>
 
+    @if(isset($breadcrumbs))
+        <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
+    @endif
+
     <div class="container mt-4">
         <div class="row">
-        <div class="col-3">
-            @include('partials.sidebar', ['categories' => \App\Models\Category::with('children')->whereNull('parent_id')->get()])
-        </div>
+            <div class="col-3">
+                @include('partials.sidebar', ['categories' => \App\Models\Category::with('children')->whereNull('parent_id')->get()])
+            </div>
             <div class="col-9">
                 @yield('content')
             </div>
@@ -107,5 +97,38 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src ="{{ asset('js/custom.js') }}"></script>
+    <footer class="bg-light text-center text-lg-start mt-4">
+        <div class="container p-4">
+            <div class="row">
+                <!-- Sekcja linków -->
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Linki</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="https://dziennikustaw.gov.pl" class="text-dark" target="_blank">dziennikustaw.gov.pl</a>
+                        </li>
+                        <li>
+                            <a href="https://monitorpolski.gov.pl" class="text-dark" target="_blank">monitorpolski.gov.pl</a>
+                        </li>
+                        <li>
+                            <a href="https://bip.gov.pl" class="text-dark" target="_blank">bip.gov.pl</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Sekcja dodatkowych opcji -->
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Dodatki</h5>
+                    <ul class="list-unstyled">
+                        <li>
+                            <span class="text-dark">Statystyki: brak danych</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3 bg-dark text-light">
+            © {{ now()->year }} Biuletyn Informacji Publicznej
+        </div>
+    </footer>
 </body>
 </html>

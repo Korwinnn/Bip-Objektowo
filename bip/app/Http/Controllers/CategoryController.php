@@ -4,23 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Services\BreadcrumbsService;
 
 class CategoryController extends Controller
 {
     private $categories;
+
+    private $breadcrumbsService;
+
+    public function __construct(BreadcrumbsService $breadcrumbsService)
+    {
+        $this->breadcrumbsService = $breadcrumbsService;
+    }
 
     public function index()
     {
         $categories = Category::with('children')
             ->whereNull('parent_id')
             ->get();
-        return view('categories.index', compact('categories'));
+        
+        // Dodajemy breadcrumbs dla strony głównej
+        $breadcrumbs = [];  // Pusta tablica, bo jesteśmy na stronie głównej
+        
+        return view('categories.index', compact('categories', 'breadcrumbs'));
     }
 
 
     public function show(Category $category)
     {
-        return view('categories.show', compact('category'));
+        $breadcrumbs = $this->breadcrumbsService->getBreadcrumbs($category);
+        return view('categories.show', compact('category', 'breadcrumbs'));
     }
 
     public function create()

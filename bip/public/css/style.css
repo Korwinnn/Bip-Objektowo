@@ -108,7 +108,7 @@
     /* Sidebar */
     .sidebar {
         background: #f8f9fa;
-        min-height: calc(100vh - 100px);
+        height: auto; /* Automatyczna wysokość */
         padding: 1rem;
         position: relative;
         z-index: 1000;
@@ -228,9 +228,12 @@
         background-color: #a81d1d;
     }
 
-    #add-category-btn{
+    #add-category-btn {
         background-color: #22CB00; 
         color: white;
+    }
+    #add-category-btn:hover {
+        background-color: #1daf00; 
     }
     #logout-btn{
         background-color: #e12727;
@@ -357,4 +360,61 @@
 .col-2{
     display: flex ; 
     justify-content: center ;
+}
+.breadcrumbs-container {
+    background-color: #f8f9fa;
+    margin-top: 0;
+    padding: 0.75rem 0;
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid rgba(255, 0, 0, 0.267);
+}
+
+.breadcrumb {
+    margin-bottom: 0;
+    padding: 0;
+    background-color: transparent;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    padding: 0 0.5rem;
+}
+.breadcrumb a {
+    text-decoration: none;
+    color: rgba(184, 0, 0, 0.753);
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline; /* Jeśli chcesz, aby podkreślenie pojawiało się po najechaniu */
+}
+.category-actions {
+    display: none;
+    margin-left: 10px;
+}
+
+.category-item:hover .category-actions,
+.subcategory-list li:hover .category-actions {
+    display: inline-block;
+}
+
+.category-actions .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    margin-left: 5px;
+}
+
+.category-link,
+.subcategory-link {
+    flex-grow: 1;
+}
+
+.subcategory-list li {
+    padding: 5px 0;
+}
+#go-dashboard-btn{
+    color: white;
+    background-color: rgba(209, 1, 1, 0.74) ;
+}
+#go-dashboard-btn:hover{
+    background-color: rgba(172, 1, 1, 0.74) ;
 }
