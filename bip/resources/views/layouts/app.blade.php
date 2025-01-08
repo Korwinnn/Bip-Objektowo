@@ -120,7 +120,13 @@
                     <h5 class="text-uppercase">Dodatki</h5>
                     <ul class="list-unstyled">
                         <li>
-                            <span class="text-dark">Statystyki: brak danych</span>
+                            <span class="text-dark">Statystyki</span>
+                        </li>
+                        <li>
+                            <span class="text-dark">RSS</span>
+                        </li>
+                        <li>
+                            <span class="text-dark">Mapa Strony</span>
                         </li>
                     </ul>
                 </div>

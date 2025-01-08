@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Services\BreadcrumbsService;
+use App\Models\CategoryHistory;
 
 class CategoryController extends Controller
 {
@@ -50,8 +51,13 @@ class CategoryController extends Controller
             'parent_id' => 'nullable|exists:categories,id'
         ]);
 
-        Category::create($validated);
-        // zmiana z route('categories.index') na route('dashboard')
+        $category = new Category($validated);
+        $category->created_by = auth()->id();
+        $category->updated_by = auth()->id();
+        $category->created_at = now();
+        $category->updated_at = now();
+        $category->save();
+
         return redirect()->route('admin.dashboard')->with('success', 'Kategoria została dodana');
     }
 
@@ -68,9 +74,26 @@ class CategoryController extends Controller
             'content' => 'nullable',
             'parent_id' => 'nullable|exists:categories,id'
         ]);
-        
+
         try {
-            $category->update($validated);
+            // Zapisz historię zmian
+            CategoryHistory::create([
+                'category_id' => $category->id,
+                'user_id' => auth()->id(),
+                'old_name' => $category->name,
+                'new_name' => $validated['name'],
+                'old_content' => $category->content,
+                'new_content' => $validated['content']
+            ]);
+
+            // Aktualizuj licznik zmian
+            $category->increment('changes_count');
+            
+            // Aktualizuj kategorię
+            $category->fill($validated);
+            $category->updated_by = auth()->id();
+            $category->save();
+            
             return redirect()
                 ->route('categories.show', $category)
                 ->with('success', 'Kategoria została zaktualizowana');
