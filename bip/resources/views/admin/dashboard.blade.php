@@ -13,9 +13,20 @@
         <div class="card-body">
             <h4>Witaj, {{ Auth::user()->name }}!</h4>
 
-            <a href="{{ route('settings.edit') }}" class="btn btn-danger">
-                <i class="fas fa-cog"></i> Ustawienia instytucji
-            </a>
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <div class="d-flex gap-2">
+                <a href="{{ route('settings.edit') }}" class="btn btn-danger">
+                    <i class="fas fa-cog"></i> Ustawienia instytucji
+                </a>
+                <a href="{{ route('users.create') }}" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Dodaj użytkownika
+                </a>
+            </div>
         </div>
     </div>
 </div>
