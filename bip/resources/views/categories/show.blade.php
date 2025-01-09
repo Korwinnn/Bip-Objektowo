@@ -51,7 +51,7 @@
             </tbody>
         </table>
         
-        <button type="button" class="btn btn-info mt-2" data-bs-toggle="modal" data-bs-target="#historyModal">
+        <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#historyModal">
             Rejestr zmian
         </button>
     </div>
@@ -72,20 +72,37 @@
                             <tr>
                                 <th>Data</th>
                                 <th>Autor zmian</th>
-                                <th>Stara nazwa</th>
                                 <th>Nowa nazwa</th>
+                                <th>Nowa treść</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($category->history()->orderBy('created_at', 'desc')->get() as $history)
                                 <tr>
                                     <td>{{ $history->created_at->format('d.m.Y H:i') }}</td>
-                                    <td>{{ $history->created_at->format('d.m.Y H:i') }}</td>
                                     <td>{{ $history->user->name }}</td>
-                                    <td>{{ $history->old_name }}</td>
                                     <td>{{ $history->new_name }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#contentModal{{ $history->id }}">
+                                            Pokaż treść
+                                        </button>
+                                    </td>
                                 </tr>
                             @endforeach
+                            <tr>
+                                <td>{{ $category->created_at->format('d.m.Y H:i') }}<br><span class="badge bg-success">Utworzenie</span></td>
+                                <td>{{ $category->creator->name }}</td>
+                                <td>{{ $category->name }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-primary" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#contentModalInitial">
+                                        Pokaż treść
+                                    </button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -93,4 +110,19 @@
         </div>
     </div>
 </div>
+@foreach($category->history()->orderBy('created_at', 'desc')->get() as $history)
+    <div class="modal fade" id="contentModal{{ $history->id }}" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Treść z dnia {{ $history->created_at->format('d.m.Y H:i') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    {!! $history->new_content !!}
+                </div>
+            </div>
+        </div>
+    </div>
+@endforeach
 @endsection

@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use Illuminate\Http\Request;
-use Intervention\Image\Facades\Image;
 
 class SettingController extends Controller
 {
@@ -17,7 +16,7 @@ class SettingController extends Controller
     {
         $request->validate([
             'institution_name' => 'required|string|max:255',
-            'institution_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'institution_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048|dimensions:max_height=120',
         ]);
 
         // Aktualizacja nazwy instytucji
@@ -30,13 +29,7 @@ class SettingController extends Controller
         if ($request->hasFile('institution_logo')) {
             $file = $request->file('institution_logo');
             
-            // Sprawdzanie wysokości obrazu
-            $image = Image::make($file);
-            if ($image->height() > 120) {
-                return redirect()->back()->withErrors(['institution_logo' => 'Logo nie może mieć więcej niż 120px wysokości.']);
-            }
-            
-            // Zapisz obraz po sprawdzeniu
+            // Zapisz obraz
             $filename = 'institution_logo.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('images', $filename, 'public');
             Setting::updateOrCreate(
