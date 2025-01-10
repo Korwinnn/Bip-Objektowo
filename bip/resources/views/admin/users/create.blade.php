@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email (opcjonalnie) </label>
+                    <label for="email" class="form-label">Email (opcjonalnie)</label>
                     <input type="email" class="form-control @error('email') is-invalid @enderror" 
                            id="email" name="email" value="{{ old('email') }}">
                     @error('email')
@@ -39,8 +39,13 @@
 
                 <div class="mb-3">
                     <label for="password" class="form-label">Hasło</label>
-                    <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                           id="password" name="password" required>
+                    <div class="input-group">
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                               id="password" name="password" required>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
                     @error('password')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -48,8 +53,13 @@
 
                 <div class="mb-3">
                     <label for="password_confirmation" class="form-label">Potwierdź hasło</label>
-                    <input type="password" class="form-control" 
-                           id="password_confirmation" name="password_confirmation" required>
+                    <div class="input-group">
+                        <input type="password" class="form-control" 
+                               id="password_confirmation" name="password_confirmation" required>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirmation">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="d-flex justify-content-between">
@@ -60,4 +70,22 @@
         </div>
     </div>
 </div>
+
+<script>
+document.getElementById('togglePassword').addEventListener('click', function() {
+    const password = document.getElementById('password');
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    this.querySelector('i').classList.toggle('fa-eye');
+    this.querySelector('i').classList.toggle('fa-eye-slash');
+});
+
+document.getElementById('togglePasswordConfirmation').addEventListener('click', function() {
+    const password = document.getElementById('password_confirmation');
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    this.querySelector('i').classList.toggle('fa-eye');
+    this.querySelector('i').classList.toggle('fa-eye-slash');
+});
+</script>
 @endsection

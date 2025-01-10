@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     protected $fillable = [
+        'parent_id',
         'name',
         'content',
-        'parent_id',
         'created_by',
         'updated_by',
         'changes_count'
@@ -36,12 +36,14 @@ class Category extends Model
     }
     public function creator()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by')
+            ->withDefault(['name' => 'Użytkownik został usunięty']);
     }
 
     public function updater()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by')
+            ->withDefault(['name' => 'Użytkownik został usunięty']);
     }
 
     public function history()

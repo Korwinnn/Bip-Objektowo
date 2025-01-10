@@ -33,3 +33,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
 });
+
+Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
