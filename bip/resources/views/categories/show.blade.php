@@ -94,7 +94,7 @@
                             <tr>
                                 <td>{{ $category->created_at->format('d.m.Y H:i') }}<br><span class="badge bg-success">Utworzenie</span></td>
                                 <td>{{ $category->creator->name }}</td>
-                                <td>{{ $category->name }}</td>
+                                <td>{{ $originalName }}</td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-primary" 
                                             data-bs-toggle="modal" 
@@ -125,4 +125,18 @@
         </div>
     </div>
 @endforeach
+<!-- Modal dla pierwotnej wersji -->
+<div class="modal fade" id="contentModalInitial" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Treść oryginalna z dnia {{ $category->created_at->format('d.m.Y H:i') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                {!! $originalContent !!}
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

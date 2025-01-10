@@ -34,7 +34,17 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         $breadcrumbs = $this->breadcrumbsService->getBreadcrumbs($category);
-        return view('categories.show', compact('category', 'breadcrumbs'));
+        
+        // Pobieramy pierwszą wersję z historii
+        $originalVersion = $category->history()
+            ->orderBy('created_at', 'asc')
+            ->first();
+        
+        // Jeśli nie ma historii, używamy aktualnych wartości jako oryginalnych
+        $originalContent = $originalVersion ? $originalVersion->old_content : $category->content;
+        $originalName = $originalVersion ? $originalVersion->old_name : $category->name;
+        
+        return view('categories.show', compact('category', 'breadcrumbs', 'originalContent', 'originalName'));
     }
 
     public function create()
