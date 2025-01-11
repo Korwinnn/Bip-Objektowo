@@ -48,12 +48,73 @@
                     <th class="bg-light">Liczba zmian:</th>
                     <td>{{ $category->changes_count }}</td>
                 </tr>
+                <tr>
+                    <th class="bg-light">Liczba odwiedzin:</th>
+                    <td>{{ $category->visits_count }}</td>
+                </tr>
             </tbody>
         </table>
-        
         <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#historyModal">
             Rejestr zmian
         </button>
+        <div class="card mt-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Statystyki odwiedzin</h5>
+            </div>
+            <div class="card-body">
+                <div id="visitsChart" style="height: 300px;"></div>
+            </div>
+        </div>
+
+        @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chartData = @json($visitChartData);
+            
+            const options = {
+                series: [{
+                    name: 'Odwiedziny',
+                    data: chartData.map(item => ({
+                        x: new Date(item.date).getTime(),
+                        y: item.count
+                    }))
+                }],
+                chart: {
+                    type: 'area',
+                    height: 300,
+                    toolbar: {
+                        show: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth'
+                },
+                xaxis: {
+                    type: 'datetime'
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(val) {
+                            return Math.round(val);
+                        }
+                    }
+                },
+                tooltip: {
+                    x: {
+                        format: 'dd MMM yyyy'
+                    }
+                }
+            };
+
+            const chart = new ApexCharts(document.querySelector("#visitsChart"), options);
+            chart.render();
+        });
+        </script>
+        @endpush
     </div>
 </div>
 

@@ -50,4 +50,28 @@ class Category extends Model
     {
         return $this->hasMany(CategoryHistory::class);
     }
+    public function visits()
+    {
+        return $this->hasMany(CategoryVisit::class);
+    }
+
+    public function getVisitsCountAttribute()
+    {
+        return $this->visits()->count();
+    }
+
+    public function getVisitsChartDataAttribute()
+    {
+        return $this->visits()
+            ->selectRaw('DATE(visited_at) as date, COUNT(*) as count')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'date' => $item->date,
+                    'count' => $item->count
+                ];
+            });
+    }
 }

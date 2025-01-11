@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Services\BreadcrumbsService;
 use App\Models\CategoryHistory;
+use App\Models\CategoryVisit;
 
 class CategoryController extends Controller
 {
@@ -31,20 +32,34 @@ class CategoryController extends Controller
     }
 
 
-    public function show(Category $category)
+    public function show(Category $category, Request $request)
     {
+        // Zapisz odwiedziny
+        CategoryVisit::create([
+            'category_id' => $category->id,
+            'visited_at' => now(),
+            'ip_address' => $request->ip()
+        ]);
+
         $breadcrumbs = $this->breadcrumbsService->getBreadcrumbs($category);
         
-        // Pobieramy pierwszą wersję z historii
         $originalVersion = $category->history()
             ->orderBy('created_at', 'asc')
             ->first();
         
-        // Jeśli nie ma historii, używamy aktualnych wartości jako oryginalnych
         $originalContent = $originalVersion ? $originalVersion->old_content : $category->content;
         $originalName = $originalVersion ? $originalVersion->old_name : $category->name;
         
-        return view('categories.show', compact('category', 'breadcrumbs', 'originalContent', 'originalName'));
+        // Pobierz dane do wykresu
+        $visitChartData = $category->visitsChartData;
+        
+        return view('categories.show', compact(
+            'category', 
+            'breadcrumbs', 
+            'originalContent', 
+            'originalName',
+            'visitChartData'
+        ));
     }
 
     public function create()

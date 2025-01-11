@@ -97,7 +97,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src ="{{ asset('js/custom.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="{{ asset('js/custom.js') }}"></script>
+    @stack('scripts')   <!-- Dodajemy tę linię dla obsługi dynamicznych skryptów -->
     <footer class="bg-light text-center text-lg-start mt-4">
         <div class="container p-4">
             <div class="row">
