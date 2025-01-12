@@ -35,3 +35,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
+Route::get('/categories/{category}/print', [CategoryController::class, 'print'])->name('categories.print');
+Route::get('/categories/{category}/pdf', [CategoryController::class, 'generatePdf'])->name('categories.pdf');
+
+Route::get('/categories/{category}/print', [CategoryController::class, 'print'])->name('categories.print');
+Route::get('/categories/{category}/pdf', [CategoryController::class, 'pdf'])->name('categories.pdf');

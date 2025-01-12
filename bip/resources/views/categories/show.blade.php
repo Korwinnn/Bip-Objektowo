@@ -1,9 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
+    <iframe id="printFrame" style="display: none;"></iframe>
     <div class="card">
         <div class="card-header">
-            <h3>{{ $category->name }}</h3>
+            <div class="d-flex justify-content-between align-items-center">
+                <h3>{{ $category->name }}</h3>
+                <div class="btn-group">
+                    <button onclick="printCategory()" class="btn btn-outline-secondary" title="Drukuj">
+                        <i class="fas fa-print"></i>
+                    </button>
+                    <script>
+                        function printCategory() {
+                            const iframe = document.getElementById('printFrame');
+                            iframe.src = "{{ route('categories.print', $category) }}";
+                            
+                            iframe.onload = function() {
+                                iframe.contentWindow.print();
+                            };
+                        }
+                    </script>
+                    <a href="{{ route('categories.pdf', $category) }}" class="btn btn-outline-secondary" title="Pobierz PDF">
+                        <i class="fas fa-file-pdf"></i>
+                    </a>
+                    <a href="{{ route('categories.show', $category) }}" class="btn btn-outline-secondary" target="_blank" title="Otwórz w nowej karcie" style="border-right: 1px solid gray;">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             {!! $category->content !!}

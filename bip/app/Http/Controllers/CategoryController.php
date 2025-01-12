@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Services\BreadcrumbsService;
 use App\Models\CategoryHistory;
 use App\Models\CategoryVisit;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Setting;
+use Carbon\Carbon;
 
 class CategoryController extends Controller
 {
@@ -144,5 +147,40 @@ class CategoryController extends Controller
             ->get();
             
         return response()->json($results);
+    }
+    public function printView(Category $category)
+    {
+        $now = now();
+        $institution = Setting::where('key', 'institution_name')->first()->value ?? 'Biuletyn Informacji Publicznej';
+        
+        return view('categories.print', compact('category', 'now', 'institution'));
+    }
+
+    public function generatePdf(Category $category)
+    {
+        $now = now();
+        $institution = Setting::where('key', 'institution_name')->first()->value ?? 'Biuletyn Informacji Publicznej';
+        
+        $pdf = PDF::loadView('categories.pdf', compact('category', 'now', 'institution'));
+        
+        return $pdf->download($category->name . '.pdf');
+    }
+
+    public function print(Category $category)
+    {
+        $now = Carbon::now();
+        $institution = config('app.name', 'BIP');
+        
+        return view('categories.print', compact('category', 'now', 'institution'));
+    }
+
+    public function pdf(Category $category)
+    {
+        $now = Carbon::now();
+        $institution = config('app.name', 'BIP');
+        
+        $pdf = PDF::loadView('categories.pdf', compact('category', 'now', 'institution'));
+        
+        return $pdf->download($category->name . '.pdf');
     }
 }
