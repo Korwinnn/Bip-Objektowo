@@ -41,3 +41,5 @@ Route::get('/categories/{category}/pdf', [CategoryController::class, 'generatePd
 
 Route::get('/categories/{category}/print', [CategoryController::class, 'print'])->name('categories.print');
 Route::get('/categories/{category}/pdf', [CategoryController::class, 'pdf'])->name('categories.pdf');
+
+Route::get('/categories/{category}/window', [CategoryController::class, 'showInWindow'])->name('categories.window');

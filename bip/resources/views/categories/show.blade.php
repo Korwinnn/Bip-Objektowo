@@ -23,9 +23,18 @@
                     <a href="{{ route('categories.pdf', $category) }}" class="btn btn-outline-secondary" title="Pobierz PDF">
                         <i class="fas fa-file-pdf"></i>
                     </a>
-                    <a href="{{ route('categories.show', $category) }}" class="btn btn-outline-secondary" target="_blank" title="Otwórz w nowej karcie" style="border-right: 1px solid gray;">
+                    <button onclick="openInNewWindow()" class="btn btn-outline-secondary" title="Otwórz w nowym oknie">
                         <i class="fas fa-external-link-alt"></i>
-                    </a>
+                    </button>
+                    <script>
+                        function openInNewWindow() {
+                            window.open(
+                                "{{ route('categories.window', $category) }}", 
+                                "CategoryWindow", 
+                                "width=800,height=800,toolbar=no,menubar=no,scrollbars=yes"
+                            );
+                        }
+                    </script>
                 </div>
             </div>
         </div>

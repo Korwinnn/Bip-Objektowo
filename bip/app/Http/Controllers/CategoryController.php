@@ -183,4 +183,12 @@ class CategoryController extends Controller
         
         return $pdf->download($category->name . '.pdf');
     }
+
+    public function showInWindow(Category $category)
+    {
+        $now = Carbon::now();
+        $institution = config('app.name', 'BIP');
+        
+        return view('categories.window', compact('category', 'now', 'institution'));
+    }
 }
