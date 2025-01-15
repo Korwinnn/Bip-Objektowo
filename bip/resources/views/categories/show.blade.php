@@ -23,7 +23,7 @@
                     <a href="{{ route('categories.pdf', $category) }}" class="btn btn-outline-secondary" title="Pobierz PDF">
                         <i class="fas fa-file-pdf"></i>
                     </a>
-                    <button onclick="openInNewWindow()" class="btn btn-outline-secondary" title="Otwórz w nowym oknie">
+                    <button onclick="openInNewWindow()" class="btn btn-outline-secondary" title="Otwórz w nowym oknie" style="border-radius: 0 7px 7px 0;">
                         <i class="fas fa-external-link-alt"></i>
                     </button>
                     <script>

@@ -65,10 +65,11 @@ class CategoryController extends Controller
         ));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $categories = Category::all(); // do wyboru kategorii nadrzędnej
-        return view('categories.create', compact('categories'));
+        $selectedParentId = $request->get('parent_id'); // pobierz parent_id z URL
+        return view('categories.create', compact('categories', 'selectedParentId'));
     }
 
     public function store(Request $request)

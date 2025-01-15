@@ -19,6 +19,11 @@
                         </a>
                         @auth
                             <div class="category-actions">
+                                <a href="{{ route('categories.create', ['parent_id' => $category->id]) }}" 
+                                   class="btn btn-sm btn-success" 
+                                   title="Dodaj podkategorię">
+                                    <i class="fas fa-plus"></i>
+                                </a>
                                 <a href="{{ route('categories.edit', $category) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>

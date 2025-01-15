@@ -52,7 +52,6 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-
             <div class="mb-3">
                 <label for="parent_id" class="form-label">Kategoria nadrzędna (opcjonalnie)</label>
                 <select class="form-select @error('parent_id') is-invalid @enderror" 
@@ -61,7 +60,7 @@
                     <option value="">Brak (kategoria główna)</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}" 
-                                {{ old('parent_id') == $category->id ? 'selected' : '' }}>
+                                {{ (old('parent_id') == $category->id || $selectedParentId == $category->id) ? 'selected' : '' }}>
                             {{ $category->name }}
                         </option>
                     @endforeach

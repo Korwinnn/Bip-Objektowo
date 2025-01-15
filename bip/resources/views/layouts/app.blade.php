@@ -8,6 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
     <script src="https://cdn.tiny.cloud/1/cnz8bjladd3d6xpxjdsc305h8oukukqwqcdswx4zxds5mp8a/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
@@ -126,10 +127,10 @@
                             <span class="text-dark">Statystyki</span>
                         </li>
                         <li>
-                            <span class="text-dark">RSS</span>
+                            <a href="{{ route('rss.feed') }}" target="_blank">RSS</a>
                         </li>
                         <li>
-                            <span class="text-dark">Mapa Strony</span>
+                            <a href="{{ route('sitemap') }}">Mapa strony</a>
                         </li>
                     </ul>
                 </div>

@@ -5,6 +5,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RssController;
+use App\Http\Controllers\SitemapController;
 
 Route::get('/', [CategoryController::class, 'index']);
 Route::resource('categories', CategoryController::class);
@@ -43,3 +45,7 @@ Route::get('/categories/{category}/print', [CategoryController::class, 'print'])
 Route::get('/categories/{category}/pdf', [CategoryController::class, 'pdf'])->name('categories.pdf');
 
 Route::get('/categories/{category}/window', [CategoryController::class, 'showInWindow'])->name('categories.window');
+
+Route::get('rss', [RssController::class, 'index'])->name('rss.feed');
+
+Route::get('/sitemap', [SitemapController::class, 'index'])->name('sitemap');
