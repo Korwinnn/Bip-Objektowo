@@ -1,270 +1,330 @@
-        var domyslny_rozmiar = 16;
-        var wysoki_kontrast = false;
-        var max_rozmiar = domyslny_rozmiar * 2;
-        function changeFontSizeUp() {
-            var zmiana_na_liczbe = parseFloat(window.getComputedStyle(document.body, null).getPropertyValue('font-size'));
-            document.documentElement.style.fontSize = (zmiana_na_liczbe * 1.2) + 'px';
-            var nowa_wielkosc = zmiana_na_liczbe * 1.2;
-            if(nowa_wielkosc >= max_rozmiar){
-                document.getElementById('font-size-up-btn').disabled = true;
-            }
-            document.getElementById('font-size-down-btn').disabled = false;
+// Stałe
+const DEFAULT_FONT_SIZE = 16;
+const MAX_FONT_SIZE = DEFAULT_FONT_SIZE * 2;
+
+// Aplikuj zapisane ustawienia przy starcie
+document.addEventListener('DOMContentLoaded', function() {
+    const savedFontSize = localStorage.getItem('userFontSize');
+    if (savedFontSize) {
+        document.documentElement.style.fontSize = savedFontSize + 'px';
+        updateFontSizeButtons();
+    }
+
+    const savedTheme = localStorage.getItem('userTheme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    }
+});
+
+// Obsługa rozmiaru czcionki
+function updateFontSizeButtons() {
+    const currentSize = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
+    const sizeUpBtn = document.getElementById('size-up-btn');
+    const sizeDownBtn = document.getElementById('size-down-btn');
+    
+    if (sizeUpBtn) {
+        sizeUpBtn.disabled = currentSize >= MAX_FONT_SIZE;
+        if (currentSize >= MAX_FONT_SIZE) {
+            sizeUpBtn.style.setProperty('color', 'currentColor', 'important');
+            sizeUpBtn.style.setProperty('opacity', '0.5', 'important');
+            sizeUpBtn.style.setProperty('background', 'none', 'important');
+        } else {
+            sizeUpBtn.style.removeProperty('color');
+            sizeUpBtn.style.removeProperty('opacity');
+            sizeUpBtn.style.removeProperty('background');
         }
-
-        function changeFontSizeDown() {
-            var zmiana_na_liczbe = parseFloat(window.getComputedStyle(document.body, null).getPropertyValue('font-size'));
-            document.documentElement.style.fontSize = (zmiana_na_liczbe * 0.8) + 'px';
-            var nowa_wielkosc_m = zmiana_na_liczbe * 0.8;
-            if(nowa_wielkosc_m <= domyslny_rozmiar){
-              document.getElementById('font-size-down-btn').disabled = true;
-            }
-
-            document.getElementById('font-size-up-btn').disabled = false;
+    }
+    if (sizeDownBtn) {
+        sizeDownBtn.disabled = currentSize <= DEFAULT_FONT_SIZE;
+        if (currentSize <= DEFAULT_FONT_SIZE) {
+            sizeDownBtn.style.setProperty('color', 'currentColor', 'important');
+            sizeDownBtn.style.setProperty('opacity', '0.5', 'important');
+            sizeDownBtn.style.setProperty('background', 'none', 'important');
+        } else {
+            sizeDownBtn.style.removeProperty('color');
+            sizeDownBtn.style.removeProperty('opacity');
+            sizeDownBtn.style.removeProperty('background');
         }
+    }
+}   
 
-        function standardFontSize() {
-            document.documentElement.style.fontSize = domyslny_rozmiar + 'px';
-            document.getElementById('font-size-up-btn').disabled = false;
-            document.getElementById('font-size-down-btn').disabled = false;
+function changeFontSizeUp() {
+    const currentSize = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
+    const newSize = currentSize * 1.2;
+    
+    if (newSize <= MAX_FONT_SIZE) {
+        document.documentElement.style.fontSize = newSize + 'px';
+        localStorage.setItem('userFontSize', newSize + 'px');
+        updateFontSizeButtons();
+    }
+}
+
+function changeFontSizeDown() {
+    const currentSize = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
+    const newSize = currentSize * 0.8;
+    
+    if (newSize >= DEFAULT_FONT_SIZE) {
+        document.documentElement.style.fontSize = newSize + 'px';
+        localStorage.setItem('userFontSize', newSize + 'px');
+        updateFontSizeButtons();
+    }
+}
+
+function standardFontSize() {
+    document.documentElement.style.fontSize = DEFAULT_FONT_SIZE + 'px';
+    localStorage.setItem('userFontSize', DEFAULT_FONT_SIZE + 'px');
+    updateFontSizeButtons();
+}
+
+// Funkcje zmiany kontrastu
+function resetStyles() {
+    document.documentElement.style.filter = 'none';
+    document.documentElement.style.backgroundColor = '';
+    document.documentElement.style.color = '';
+    
+    const insLogo = document.getElementById('ins-logo');
+    const bipLogo = document.getElementById('bip-logo');
+    if (insLogo) insLogo.style.display = 'block';
+    if (bipLogo) bipLogo.style.display = 'block';
+
+    // Reset wszystkich elementów poza kontrolkami dostępności
+    const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls > *)');
+    elements.forEach(function(element) {
+        // Sprawdź, czy element nie jest wewnątrz .accessibility-controls
+        if (!element.closest('.accessibility-controls')) {
+            element.style.backgroundColor = '';
+            element.style.borderColor = '';
+            element.style.color = '';
         }
+    });
 
-        var daltonisciEnabled = false;
-        var kontrastEnabled = false;
-        var kontrast1Enabled = false;
-        var kontrast2Enabled = false;
-        var kontrast3Enabled = false;
-        var kontrast4Enabled = false;
-
-        function resetStyles() {
-            document.documentElement.style.filter = 'none';
-            document.documentElement.style.backgroundColor = '';
-            document.body.style.color = '';
-            document.getElementById('ins-logo').style.display = 'block';
-            document.getElementById('bip-logo').style.display = 'block';
-        
-            const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls *)');
-            elements.forEach(function (element) {
-                element.style.backgroundColor = '';
-                element.style.borderColor = '';
-                element.style.color = '';
-                element.classList.remove('kontrast-hover');
-            });
-        
-            const sidebar = document.querySelector('.sidebar');
-            if (sidebar) {
-                sidebar.style.setProperty('--before-color', 'red');
-            }
-        
-            // Wyłącz wszystkie motywy
-            daltonisciEnabled = false;
-            kontrastEnabled = false;
-            kontrast1Enabled = false;
-            kontrast2Enabled = false;
-            kontrast3Enabled = false;
-            kontrast4Enabled = false;
+    // Reset kart
+    document.querySelectorAll('.card').forEach(card => {
+        card.style.removeProperty('background-color');
+        let header = card.querySelector('.card-header');
+        if (header) {
+            header.style.removeProperty('background-color');
         }
+    });
 
-        function changeThemeGray() {
-            // Resetujemy style
-            resetStyles();
-            
-            // Ustawiamy filtr szarości
+    // Reset elementów bg-light
+    document.querySelectorAll('.bg-light').forEach(element => {
+        element.style.removeProperty('background-color');
+    });
+
+    // Reset linków w stopce
+    const footerLinks = document.querySelectorAll('.footer-link');
+    footerLinks.forEach(link => {
+        link.style.removeProperty('color');
+    });
+
+    // Reset tabel
+    document.querySelectorAll('table, td, th').forEach(element => {
+        element.style.backgroundColor = '';
+        element.style.color = '';
+        element.style.borderColor = '';
+    });
+
+    // Reset paska bocznego
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+        sidebar.style.setProperty('--before-color', 'red');
+    }
+
+    localStorage.removeItem('userTheme');
+}
+
+function applyTheme(theme) {
+    resetStyles();
+    
+    switch (theme) {
+        case 'gray':
             document.documentElement.style.filter = 'grayscale(100%)';
+            break;
             
+        case 'yellow-black':
+            applyContrastMode('black', 'yellow', 'yellow');
+            break;
             
-            // Przywracamy obrazki logo
-            document.getElementById('ins-logo').style.display = 'block';
-            document.getElementById('bip-logo').style.display = 'block';
+        case 'black-yellow':
+            applyContrastMode('yellow', 'black', 'black');
+            break;
             
-            // Ustawiamy flagę
-            daltonisciEnabled = true;
-        }
+        case 'white-black':
+            applyContrastMode('white', 'black', 'black');
+            break;
+            
+        case 'black-white':
+            applyContrastMode('black', 'white', 'white');
+            break;
+    }
+    
+    localStorage.setItem('userTheme', theme);
+}
 
+function applyContrastMode(bgColor, textColor, borderColor) {
+    const insLogo = document.getElementById('ins-logo');
+    const bipLogo = document.getElementById('bip-logo');
+    if (insLogo) insLogo.style.display = 'none';
+    if (bipLogo) bipLogo.style.display = 'none';
+
+    document.documentElement.style.backgroundColor = bgColor;
+    document.documentElement.style.color = textColor;
+
+    // Zastosuj style do wszystkich elementów poza kontrolkami dostępności
+    const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls > *)');
+    elements.forEach(function(element) {
+        // Sprawdź, czy element nie jest wewnątrz .accessibility-controls
+        if (!element.closest('.accessibility-controls')) {
+            element.style.backgroundColor = bgColor;
+            element.style.borderColor = borderColor;
+            element.style.color = textColor;
+        }
+    });
+
+    // Specjalna obsługa kart (metryka dokumentu i statystyki)
+    document.querySelectorAll('.card').forEach(card => {
+        card.style.setProperty('background-color', bgColor, 'important');
+        let header = card.querySelector('.card-header');
+        if (header) {
+            header.style.setProperty('background-color', bgColor, 'important');
+        }
+    });
+
+    // Specjalna obsługa tła elementów z klasą bg-light
+    document.querySelectorAll('.bg-light').forEach(element => {
+        element.style.setProperty('background-color', bgColor, 'important');
+    });
+
+    // Zastosuj style do linków w stopce
+    document.querySelectorAll('.footer-link').forEach(link => {
+        link.style.setProperty('color', textColor, 'important');
+    });
+
+    // Zastosuj style do tabel
+    document.querySelectorAll('table, td, th').forEach(element => {
+        element.style.setProperty('background-color', bgColor, 'important');
+        element.style.setProperty('color', textColor, 'important');
+        element.style.setProperty('border-color', borderColor, 'important');
+    });
+
+    // Ustaw kolor paska bocznego
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+        sidebar.style.setProperty('--before-color', borderColor);
+    }
+}
+
+// Funkcje zmiany motywów
+function changeThemeGray() {
+    const currentTheme = localStorage.getItem('userTheme');
+    if (currentTheme === 'gray') {
+        resetStyles();
+    } else {
+        applyTheme('gray');
+    }
+}
 
 function changeThemeYellowBlack() {
-    if (!kontrastEnabled) {
-        document.documentElement.style.filter = 'none';
-        document.documentElement.style.backgroundColor = 'black';
-        document.body.style.color = 'yellow';
-        document.getElementById('ins-logo').style.display = 'none' ;
-        document.getElementById('bip-logo').style.display = 'none' ;
-        const stylesheet = document.styleSheets[0];
-    
-
-        const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls *)');
-        elements.forEach(function(element) {
-            element.style.backgroundColor = 'black';
-            element.style.borderColor = 'yellow';
-            element.style.color = 'yellow';
-        });
-        const sidebar = document.querySelector('.sidebar');
-        sidebar.style.setProperty('--before-color', 'yellow');
-
-        document.getElementById('yellow-black-btn').addEventListener('DOMNodeInserted', changeTextColor);
-        
-        kontrastEnabled = true;
-    } 
-    else {
+    const currentTheme = localStorage.getItem('userTheme');
+    if (currentTheme === 'yellow-black') {
         resetStyles();
+    } else {
+        applyTheme('yellow-black');
     }
 }
-
-
 
 function changeThemeBlackYellow() {
-    if (!kontrast1Enabled) {
-        document.documentElement.style.filter = 'none';
-        document.documentElement.style.backgroundColor = 'yellow';
-        document.body.style.color = 'black';
-        document.getElementById('ins-logo').style.display = 'none' ;
-        document.getElementById('bip-logo').style.display = 'none' ;
-        const stylesheet = document.styleSheets[0];
-    
-
-        const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls *)');
-        elements.forEach(function(element) {
-            element.style.backgroundColor = 'yellow';
-            element.style.borderColor = 'black';
-            element.style.color = 'black';
-        });
-        const sidebar = document.querySelector('.sidebar');
-        sidebar.style.setProperty('--before-color', 'black');
-
-        document.getElementById('black-yellow-btn').addEventListener('DOMNodeInserted', changeTextColor);
-        
-        kontrast1Enabled = true;
-    } 
-    else {
+    const currentTheme = localStorage.getItem('userTheme');
+    if (currentTheme === 'black-yellow') {
         resetStyles();
+    } else {
+        applyTheme('black-yellow');
     }
 }
-
-var kontrast2Enabled = false;
 
 function changeThemeWhiteBlack() {
-    if (!kontrast2Enabled) {
-        document.documentElement.style.filter = 'none';
-        document.documentElement.style.backgroundColor = 'white';
-        document.body.style.color = 'black';
-        document.getElementById('ins-logo').style.display = 'none' ;
-        document.getElementById('bip-logo').style.display = 'none' ;
-        const stylesheet = document.styleSheets[0];
-    
-
-        const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls *)');
-        elements.forEach(function(element) {
-            element.style.backgroundColor = 'white';
-            element.style.borderColor = 'black';
-            element.style.color = 'black';
-        });
-        const sidebar = document.querySelector('.sidebar');
-        sidebar.style.setProperty('--before-color', 'black');
-
-        document.getElementById('black-yellow-btn').addEventListener('DOMNodeInserted', changeTextColor);
-        
-        kontrast2Enabled = true;
-    } 
-    else {
+    const currentTheme = localStorage.getItem('userTheme');
+    if (currentTheme === 'white-black') {
         resetStyles();
+    } else {
+        applyTheme('white-black');
     }
 }
-
-
 
 function changeThemeBlackWhite() {
-    if (!kontrast3Enabled) {
-        document.documentElement.style.filter = 'none';
-        document.documentElement.style.backgroundColor = 'black';
-        document.body.style.color = 'white';
-        document.getElementById('ins-logo').style.display = 'none' ;
-        document.getElementById('bip-logo').style.display = 'none' ;
-        const stylesheet = document.styleSheets[0];
-    
-
-        const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls *)');
-        elements.forEach(function(element) {
-            element.style.backgroundColor = 'black';
-            element.style.borderColor = 'white';
-            element.style.color = 'white';
-        });
-        const sidebar = document.querySelector('.sidebar');
-        sidebar.style.setProperty('--before-color', 'white');
-
-        document.getElementById('black-yellow-btn').addEventListener('DOMNodeInserted', changeTextColor);
-        
-        kontrast3Enabled = true;
-    } 
-    else {
+    const currentTheme = localStorage.getItem('userTheme');
+    if (currentTheme === 'black-white') {
         resetStyles();
+    } else {
+        applyTheme('black-white');
     }
 }
-
-
 
 function changeThemeNormal() {
-    if (!kontrast4Enabled) {
-        resetStyles();
-    }
+    resetStyles();
 }
 
-        const searchInput = document.getElementById('searchInput');
-        const searchResults = document.getElementById('searchResults');
+// Obsługa wyszukiwarki
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
 
-        searchInput.addEventListener('input', debounce(function(e) {
-            const searchTerm = e.target.value.trim();
-            
-            if (searchTerm.length < 2) {
-                searchResults.style.display = 'none';
-                return;
-            }
-
-            fetch(`/search?q=${encodeURIComponent(searchTerm)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        displayResults(data, searchTerm);
-                    } else {
-                        searchResults.innerHTML = '<div class="search-result-item">Brak wyników</div>';
-                    }
-                    searchResults.style.display = 'block';
-                });
-        }, 300));
-
-        function displayResults(results, searchTerm) {
-            searchResults.innerHTML = results.map(result => `
-                <div class="search-result-item" onclick="window.location.href='/categories/${result.id}'">
-                    <strong>${highlightText(result.name, searchTerm)}</strong>
-                    ${result.content ? `<br><small>${highlightText(truncateText(result.content, 100), searchTerm)}</small>` : ''}
-                </div>
-            `).join('');
+if (searchInput && searchResults) {
+    searchInput.addEventListener('input', debounce(function(e) {
+        const searchTerm = e.target.value.trim();
+        
+        if (searchTerm.length < 2) {
+            searchResults.style.display = 'none';
+            return;
         }
 
-        function highlightText(text, searchTerm) {
-            if (!text) return '';
-            const regex = new RegExp(`(${searchTerm})`, 'gi');
-            return text.replace(regex, '<span class="highlight">$1</span>');
-        }
+        fetch(`/search?q=${encodeURIComponent(searchTerm)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    displayResults(data, searchTerm);
+                } else {
+                    searchResults.innerHTML = '<div class="search-result-item">Brak wyników</div>';
+                }
+                searchResults.style.display = 'block';
+            });
+    }, 300));
 
-        function truncateText(text, length) {
-            if (!text) return '';
-            return text.length > length ? text.substring(0, length) + '...' : text;
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.style.display = 'none';
         }
+    });
+}
 
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
+function displayResults(results, searchTerm) {
+    searchResults.innerHTML = results.map(result => `
+        <div class="search-result-item" onclick="window.location.href='/categories/${result.id}'">
+            <strong>${highlightText(result.name, searchTerm)}</strong>
+            ${result.content ? `<br><small>${highlightText(truncateText(result.content, 100), searchTerm)}</small>` : ''}
+        </div>
+    `).join('');
+}
 
-        // Zamykanie wyników przy kliknięciu poza wyszukiwarką
-        document.addEventListener('click', function(e) {
-            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-                searchResults.style.display = 'none';
-            }
-        });
+function highlightText(text, searchTerm) {
+    if (!text) return '';
+    const regex = new RegExp(`(${searchTerm})`, 'gi');
+    return text.replace(regex, '<span class="highlight">$1</span>');
+}
+
+function truncateText(text, length) {
+    if (!text) return '';
+    return text.length > length ? text.substring(0, length) + '...' : text;
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}

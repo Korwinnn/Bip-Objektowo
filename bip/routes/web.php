@@ -52,3 +52,7 @@ Route::get('rss', [RssController::class, 'index'])->name('rss.feed');
 Route::get('/sitemap', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('/statistics', [CategoryController::class, 'statistics'])->name('statistics');
+
+Route::post('/categories/update-order', [CategoryController::class, 'updateOrder'])
+    ->name('categories.updateOrder')
+    ->middleware('auth');

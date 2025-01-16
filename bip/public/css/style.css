@@ -213,6 +213,11 @@
         color: #333;
         text-decoration: none;
         transition: all 0.2s ease;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+        min-width: 0;
     }
 
     .subcategory-link:hover {
@@ -220,6 +225,7 @@
         padding-left: 25px;
         color: #e12727;
     }
+
     #login-btn{
         background: none ;
         border: none;
@@ -408,8 +414,17 @@
     flex-grow: 1;
 }
 
-.subcategory-list li {
-    padding: 5px 0;
+  .subcategory-list li {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+    }
+
+.subcategory-list .category-actions {
+    flex-shrink: 0;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 #go-dashboard-btn{
     color: white;
@@ -417,4 +432,49 @@
 }
 #go-dashboard-btn:hover{
     background-color: rgba(172, 1, 1, 0.74) ;
+}
+.footer {
+    background-color: rgb(42, 51, 65);
+    margin-top: 2rem;
+}
+
+.footer-header {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-link {
+    color: white !important;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: #dc3545 !important;
+}
+
+.footer-icon {
+    color: #dc3545;
+    margin-right: 0.5rem;
+    width: 20px;
+}
+
+.footer-copyright {
+    text-align: center;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+}
+.accessibility-controls button:disabled {
+    color: currentColor !important;
+    opacity: 0.5 !important;
+    background: none !important;
 }

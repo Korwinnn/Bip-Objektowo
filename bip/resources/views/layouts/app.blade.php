@@ -101,44 +101,60 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{{ asset('js/custom.js') }}"></script>
     @stack('scripts')   <!-- Dodajemy tę linię dla obsługi dynamicznych skryptów -->
-    <footer class="bg-light text-center text-lg-start mt-4">
+    <footer class="footer">
         <div class="container p-4">
             <div class="row">
                 <!-- Sekcja linków -->
                 <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Linki</h5>
-                    <ul class="list-unstyled mb-0">
+                    <h5 class="text-uppercase footer-header">Linki</h5>
+                    <ul class="list-unstyled mb-0 footer-links">
                         <li>
-                            <a href="https://dziennikustaw.gov.pl" class="text-dark" target="_blank">dziennikustaw.gov.pl</a>
+                            <a href="https://dziennikustaw.gov.pl" class="footer-link" target="_blank">
+                                <i class="fas fa-file-alt footer-icon"></i>
+                                dziennikustaw.gov.pl
+                            </a>
                         </li>
                         <li>
-                            <a href="https://monitorpolski.gov.pl" class="text-dark" target="_blank">monitorpolski.gov.pl</a>
+                            <a href="https://monitorpolski.gov.pl" class="footer-link" target="_blank">
+                                <i class="fas fa-file-alt footer-icon"></i>
+                                monitorpolski.gov.pl
+                            </a>
                         </li>
                         <li>
-                            <a href="https://bip.gov.pl" class="text-dark" target="_blank">bip.gov.pl</a>
+                            <a href="https://bip.gov.pl" class="footer-link" target="_blank">
+                                <i class="fas fa-external-link-alt footer-icon"></i>
+                                bip.gov.pl
+                            </a>
                         </li>
                     </ul>
                 </div>
                 <!-- Sekcja dodatkowych opcji -->
                 <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Dodatki</h5>
-                    <ul class="list-unstyled">
+                    <h5 class="text-uppercase footer-header">Dodatki</h5>
+                    <ul class="list-unstyled footer-links">
                         <li>
-                        <a href="{{ route('statistics') }}" class="btn btn-primary">
-                            <i class="fas fa-chart-bar"></i> Statystyki
-                        </a>
+                            <a href="{{ route('statistics') }}" class="footer-link">
+                                <i class="fas fa-chart-bar footer-icon"></i>
+                                Statystyki
+                            </a>
                         </li>
                         <li>
-                            <a href="{{ route('rss.feed') }}" target="_blank">RSS</a>
+                            <a href="{{ route('rss.feed') }}" class="footer-link" target="_blank">
+                                <i class="fas fa-rss footer-icon"></i>
+                                RSS
+                            </a>
                         </li>
                         <li>
-                            <a href="{{ route('sitemap') }}">Mapa strony</a>
+                            <a href="{{ route('sitemap') }}" class="footer-link">
+                                <i class="fas fa-sitemap footer-icon"></i>
+                                Mapa strony
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="text-center p-3 bg-dark text-light">
+        <div class="footer-copyright">
             © {{ now()->year }} Biuletyn Informacji Publicznej
         </div>
     </footer>
