@@ -124,7 +124,9 @@
                     <h5 class="text-uppercase">Dodatki</h5>
                     <ul class="list-unstyled">
                         <li>
-                            <span class="text-dark">Statystyki</span>
+                        <a href="{{ route('statistics') }}" class="btn btn-primary">
+                            <i class="fas fa-chart-bar"></i> Statystyki
+                        </a>
                         </li>
                         <li>
                             <a href="{{ route('rss.feed') }}" target="_blank">RSS</a>

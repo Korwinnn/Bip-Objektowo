@@ -7,6 +7,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RssController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\StatisticsController;
 
 Route::get('/', [CategoryController::class, 'index']);
 Route::resource('categories', CategoryController::class);
@@ -49,3 +50,5 @@ Route::get('/categories/{category}/window', [CategoryController::class, 'showInW
 Route::get('rss', [RssController::class, 'index'])->name('rss.feed');
 
 Route::get('/sitemap', [SitemapController::class, 'index'])->name('sitemap');
+
+Route::get('/statistics', [CategoryController::class, 'statistics'])->name('statistics');

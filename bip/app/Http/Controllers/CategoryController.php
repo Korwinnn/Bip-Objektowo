@@ -192,4 +192,107 @@ class CategoryController extends Controller
         
         return view('categories.window', compact('category', 'now', 'institution'));
     }
+    public function statistics(Request $request)
+    {
+        $selectedYear = $request->input('year', now()->year);
+        $selectedCategoryId = $request->input('category_id');
+        
+        // Pobierz wszystkie kategorie do dropdowna
+        $categories = Category::all();
+        
+        // Pobierz dostępne lata
+        $visitsQuery = CategoryVisit::query();
+        if ($selectedCategoryId) {
+            $visitsQuery->where('category_id', $selectedCategoryId);
+        }
+        
+        $availableYears = $visitsQuery
+            ->selectRaw('YEAR(visited_at) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
+        // Statystyki miesięczne
+        $monthlyQuery = CategoryVisit::whereYear('visited_at', $selectedYear);
+        if ($selectedCategoryId) {
+            $monthlyQuery->where('category_id', $selectedCategoryId);
+        }
+        
+        $monthlyStats = $monthlyQuery
+            ->selectRaw('MONTH(visited_at) as month, COUNT(*) as visits')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->pluck('visits', 'month')
+            ->toArray();
+
+        // Wypełnij brakujące miesiące zerami
+        $monthlyData = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $monthlyData[] = [
+                'month' => date('F', mktime(0, 0, 0, $i, 1)),
+                'visits' => $monthlyStats[$i] ?? 0
+            ];
+        }
+
+        // Statystyki dzienne dla aktualnego miesiąca
+        $dailyQuery = CategoryVisit::whereYear('visited_at', $selectedYear)
+            ->whereMonth('visited_at', now()->month);
+        if ($selectedCategoryId) {
+            $dailyQuery->where('category_id', $selectedCategoryId);
+        }
+        
+        $dailyStats = $dailyQuery
+            ->selectRaw('DAY(visited_at) as day, COUNT(*) as visits')
+            ->groupBy('day')
+            ->orderBy('day')
+            ->get()
+            ->pluck('visits', 'day')
+            ->toArray();
+
+        // Wypełnij brakujące dni zerami
+        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, now()->month, $selectedYear);
+        $dailyData = [];
+        for ($i = 1; $i <= $daysInMonth; $i++) {
+            $dailyData[] = [
+                'day' => $i,
+                'visits' => $dailyStats[$i] ?? 0
+            ];
+        }
+
+        // Statystyki godzinowe
+        $hourlyQuery = CategoryVisit::whereYear('visited_at', $selectedYear)
+            ->whereMonth('visited_at', now()->month)
+            ->whereDay('visited_at', now()->day);
+        if ($selectedCategoryId) {
+            $hourlyQuery->where('category_id', $selectedCategoryId);
+        }
+        
+        $hourlyStats = $hourlyQuery
+            ->selectRaw('HOUR(visited_at) as hour, COUNT(*) as visits')
+            ->groupBy('hour')
+            ->orderBy('hour')
+            ->get()
+            ->pluck('visits', 'hour')
+            ->toArray();
+
+        // Wypełnij brakujące godziny zerami
+        $hourlyData = [];
+        for ($i = 0; $i < 24; $i++) {
+            $hourlyData[] = [
+                'hour' => sprintf('%02d:00', $i),
+                'visits' => $hourlyStats[$i] ?? 0
+            ];
+        }
+
+        return view('categories.statistics', compact(
+            'categories',
+            'selectedCategoryId',
+            'selectedYear',
+            'availableYears',
+            'monthlyData',
+            'dailyData',
+            'hourlyData'
+        ));
+    }
 }
