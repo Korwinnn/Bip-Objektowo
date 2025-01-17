@@ -478,3 +478,439 @@
     opacity: 0.5 !important;
     background: none !important;
 }
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+}
+
+#cookie-banner {
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* Podstawowe style responsywne */
+@media (max-width: 768px) {
+    /* Układ strony */
+    .container {
+        padding: 0 10px;
+    }
+
+    .row {
+        margin: 0;
+    }
+
+    .col-3, .col-9 {
+        width: 100%;
+        padding: 0;
+    }
+
+    /* Pasek dostępności */
+    .accessibility-bar .row {
+        flex-direction: column;
+    }
+
+    .accessibility-bar .col-4,
+    .accessibility-bar .col-6,
+    .accessibility-bar .col-2 {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .accessibility-controls {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+    }
+
+    .accessibility-controls button {
+        width: 100% !important;
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    /* Wyszukiwarka */
+    .search-container {
+        max-width: 100%;
+        margin-bottom: 10px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        margin-bottom: 20px;
+        position: fixed;
+        left: -100%;
+        top: 0;
+        height: 100vh;
+        width: 80%;
+        background: white;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        overflow-y: auto;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .sidebar-toggle {
+        display: block;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1001;
+        background: rgba(220, 53, 69, 0.9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .category-list {
+        padding: 20px;
+    }
+
+    .subcategory-list {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        box-shadow: none;
+        padding-left: 20px;
+    }
+
+    /* Karty i tabele */
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    /* Przyciski akcji */
+    .category-actions {
+        display: flex;
+        margin-top: 10px;
+    }
+
+    .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    /* Modalne okna */
+    .modal-dialog {
+        margin: 10px;
+    }
+
+    /* Stopka */
+    .footer {
+        text-align: center;
+    }
+
+    .footer-links li {
+        margin-bottom: 15px;
+    }
+}
+
+/* Style dla bardzo małych ekranów */
+@media (max-width: 480px) {
+    .accessibility-controls {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-header {
+        padding: 10px;
+    }
+
+    .card-body {
+        padding: 10px;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Overlay dla menu mobilnego */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* Dodaj na końcu istniejącego pliku style.css */
+
+/* Responsywność dla header - urządzenia mobilne */
+@media (max-width: 768px) {
+    .header .row {
+        gap: 15px;
+    }
+
+    .header .col-3, 
+    .header .col-6 {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    /* Logo instytucji */
+    .header .col-3:first-child {
+        order: 1;
+        text-align: center;
+        position: relative;
+    }
+
+    /* Tekst środkowy */
+    .header .col-6 {
+        order: 3;
+        text-align: center !important;
+    }
+
+    /* Logo BIP */
+    .header .col-3:last-child {
+        order: 2;
+        text-align: center;
+    }
+
+    #ins-logo {
+        max-height: 60px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    #bip-logo {
+        max-height: 40px;
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 15px;
+    }
+
+    #tytul_strony {
+        font-size: 1.25rem;
+        margin-bottom: 5px;
+    }
+
+    #nazwa_instytucji {
+        font-size: 1.15rem;
+    }
+}
+
+/* Bardzo małe ekrany */
+@media (max-width: 480px) {
+    .header .row {
+        gap: 10px;
+    }
+
+    #ins-logo {
+        max-height: 50px;
+    }
+
+    #bip-logo {
+        max-height: 35px;
+        margin-left: 10px;
+    }
+
+    #tytul_strony {
+        font-size: 1.1rem;
+    }
+
+    #nazwa_instytucji {
+        font-size: 1rem;
+    }
+}
+
+/* Średnie ekrany */
+@media (min-width: 769px) and (max-width: 992px) {
+    #ins-logo {
+        max-height: 70px;
+    }
+
+    #bip-logo {
+        max-height: 50px;
+    }
+
+    #tytul_strony {
+        font-size: 1.4rem;
+    }
+
+    #nazwa_instytucji {
+        font-size: 1.3rem;
+    }
+}
+/* Style dla logo w headerze */
+@media (max-width: 768px) {
+    /* Kontener dla obu logo */
+    .header .col-3:first-child {
+        order: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 10px;
+    }
+
+    /* Ukryj oryginalny kontener logo BIP */
+    .header .col-3:last-child {
+        display: none;
+    }
+
+    /* Przenieś logo BIP do pierwszego kontenera */
+    #bip-logo {
+        display: block;
+        max-height: 40px;
+    }
+
+    #ins-logo {
+        display: block;
+        max-height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header .col-3:first-child {
+        gap: 10px;
+    }
+
+    #ins-logo {
+        max-height: 50px;
+    }
+
+    #bip-logo {
+        max-height: 35px;
+    }
+}
+/* Style dla logo w headerze */
+@media (max-width: 768px) {
+    /* Kontener dla logo */
+    .header .col-3:first-child .d-flex {
+        gap: 10px;
+    }
+
+    #ins-logo {
+        max-height: 60px;
+        width: auto;
+    }
+
+    #bip-logo-mobile {
+        display: block !important;
+        max-height: 40px;
+        width: auto;
+    }
+
+    /* Ukryj oryginalny kontener logo BIP */
+    .header .col-3:last-child {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    #ins-logo {
+        max-height: 50px;
+    }
+
+    #bip-logo-mobile {
+        max-height: 35px;
+    }
+}
+/* Style dla footera na mobile */
+@media (max-width: 768px) {
+    /* Centrowanie elementów w footerze */
+    .footer .footer-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-header {
+        text-align: center;
+    }
+
+    .footer-link {
+        justify-content: center;
+        margin: 8px 0;
+    }
+
+    .footer .col-lg-6 {
+        margin-bottom: 20px;
+    }
+
+    /* Przycisk menu - prawy górny róg */
+    .sidebar-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1001;
+        background: rgba(220, 53, 69, 0.9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        transition: background-color 0.3s ease;
+    }
+
+    .sidebar-toggle:hover {
+        background: rgba(220, 53, 69, 1);
+    }
+
+    .sidebar-toggle i {
+        font-size: 1.25rem;
+    }
+
+    /* Dodatkowe usprawnienia dla menu */
+    .sidebar {
+        top: 0;
+        padding-top: 70px; /* Miejsce na przycisk menu */
+    }
+
+    .sidebar-overlay {
+        top: 0;
+    }
+}
+
+/* Dodatkowe style dla bardzo małych ekranów */
+@media (max-width: 480px) {
+    .footer-link {
+        font-size: 0.9rem;
+    }
+
+    .sidebar-toggle {
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+    }
+}

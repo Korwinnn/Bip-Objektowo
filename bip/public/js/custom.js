@@ -328,3 +328,122 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const cookieConsent = localStorage.getItem('cookieConsent');
+    
+    if (!cookieConsent) {
+        const cookieBar = document.createElement('div');
+        cookieBar.innerHTML = `
+            <div id="cookie-banner" style="position: fixed; bottom: 0; left: 0; right: 0; background-color: white; border-top: 1px solid #dee2e6; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000;">
+                <div class="container">
+                    <div class="row align-items-center py-3">
+                        <div class="col-md-9">
+                            <p class="mb-0">Ta strona używa plików cookie w celu zapewnienia najlepszej jakości korzystania z naszej witryny. 
+                            Korzystając z tej strony, wyrażasz zgodę na używanie przez nas plików cookie zgodnie z naszą polityką prywatności.</p>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            <button id="accept-cookies" class="btn btn-danger">Akceptuję</button>
+                            <button id="close-cookie-banner" class="btn btn-link text-secondary">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(cookieBar);
+        
+        // Obsługa przycisków
+        document.getElementById('accept-cookies').addEventListener('click', acceptCookies);
+        document.getElementById('close-cookie-banner').addEventListener('click', acceptCookies);
+    }
+});
+
+function acceptCookies() {
+    localStorage.setItem('cookieConsent', 'accepted');
+    const banner = document.getElementById('cookie-banner');
+    if (banner) {
+        banner.style.animation = 'fadeOut 0.3s';
+        setTimeout(() => {
+            banner.remove();
+        }, 300);
+    }
+}
+
+// Obsługa menu mobilnego
+document.addEventListener('DOMContentLoaded', function() {
+    // Dodaj przycisk do przełączania menu
+    const toggleButton = document.createElement('button');
+    toggleButton.className = 'sidebar-toggle d-md-none';
+    toggleButton.innerHTML = '<i class="fas fa-bars"></i>';
+    document.body.appendChild(toggleButton);
+
+    // Dodaj overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'sidebar-overlay';
+    document.body.appendChild(overlay);
+
+    // Pobierz sidebar
+    const sidebar = document.querySelector('.sidebar');
+
+    // Funkcja przełączająca menu
+    function toggleSidebar() {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+    }
+
+    // Dodaj obsługę kliknięć
+    toggleButton.addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', toggleSidebar);
+
+    // Zamykaj menu po kliknięciu w link
+    sidebar.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        });
+    });
+
+    // Obsługa gestów dotykowych
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    document.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, false);
+
+    function handleSwipe() {
+        const swipeThreshold = 100;
+        if (touchEndX - touchStartX > swipeThreshold) {
+            // Przesunięcie w prawo - otwórz menu
+            if (!sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        } else if (touchStartX - touchEndX > swipeThreshold) {
+            // Przesunięcie w lewo - zamknij menu
+            if (sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        }
+    }
+});
+
+// Dostosowanie wykresów do ekranu mobilnego
+window.addEventListener('resize', function() {
+    if (typeof ApexCharts !== 'undefined') {
+        ApexCharts.exec('visitsChart', 'updateOptions', {
+            chart: {
+                height: window.innerWidth < 768 ? 250 : 300
+            }
+        });
+    }
+});
