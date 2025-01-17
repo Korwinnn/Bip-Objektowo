@@ -12,7 +12,8 @@ class Category extends Model
         'content',
         'created_by',
         'updated_by',
-        'changes_count'
+        'changes_count',
+        'display_order'
     ];
 
     public $timestamps = true;
@@ -26,14 +27,80 @@ class Category extends Model
     // Relacja do podkategorii
     public function children()
     {
-        return $this->hasMany(Category::class, 'parent_id');
+        return $this->hasMany(Category::class, 'parent_id')
+                    ->orderBy('display_order', 'asc');
     }
     
-    // Metoda pomocnicza do pobrania kategorii głównych
+    // Metoda pomocnicza do pobrania kategorii głównych z sortowaniem
     public static function mainCategories()
     {
-        return self::whereNull('parent_id')->with('children')->get();
+        return self::whereNull('parent_id')
+                   ->orderBy('display_order', 'asc')
+                   ->with(['children' => function($query) {
+                       $query->orderBy('display_order', 'asc');
+                   }])
+                   ->get();
     }
+
+    // Boot method do automatycznego ustawiania display_order dla nowych kategorii
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Dodajemy domyślne sortowanie dla wszystkich zapytań
+        static::addGlobalScope('order', function ($builder) {
+            $builder->orderBy('display_order', 'asc');
+        });
+
+        static::creating(function ($category) {
+            if (is_null($category->display_order)) {
+                $maxOrder = self::where('parent_id', $category->parent_id)
+                               ->max('display_order');
+                $category->display_order = is_null($maxOrder) ? 0 : $maxOrder + 1;
+            }
+        });
+    }
+
+    // Metoda pomocnicza do aktualizacji kolejności
+    public function updateOrder($newPosition, $newParentId = null)
+    {
+        $oldParentId = $this->parent_id;
+        $oldPosition = $this->display_order;
+
+        // Jeśli zmienia się rodzic
+        if ($newParentId !== null && $oldParentId !== $newParentId) {
+            // Zmniejsz pozycję wszystkich elementów w starym rodzicu
+            self::where('parent_id', $oldParentId)
+                ->where('display_order', '>', $oldPosition)
+                ->decrement('display_order');
+
+            // Zwiększ pozycję elementów w nowym rodzicu
+            self::where('parent_id', $newParentId)
+                ->where('display_order', '>=', $newPosition)
+                ->increment('display_order');
+
+            $this->parent_id = $newParentId;
+            $this->display_order = $newPosition;
+        } 
+        // Jeśli pozostaje w tym samym rodzicu
+        else {
+            if ($oldPosition < $newPosition) {
+                // Przesuwanie w dół
+                self::where('parent_id', $this->parent_id)
+                    ->whereBetween('display_order', [$oldPosition + 1, $newPosition])
+                    ->decrement('display_order');
+            } else {
+                // Przesuwanie w górę
+                self::where('parent_id', $this->parent_id)
+                    ->whereBetween('display_order', [$newPosition, $oldPosition - 1])
+                    ->increment('display_order');
+            }
+            $this->display_order = $newPosition;
+        }
+
+        return $this->save();
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by')
@@ -50,6 +117,7 @@ class Category extends Model
     {
         return $this->hasMany(CategoryHistory::class);
     }
+
     public function visits()
     {
         return $this->hasMany(CategoryVisit::class);

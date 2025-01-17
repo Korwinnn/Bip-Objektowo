@@ -70,51 +70,63 @@
                     </form>
                 </div>
             @endif
+            
+            <button type="button" class="btn btn-danger mt-3" data-bs-toggle="modal" data-bs-target="#metadataModal">
+                <i class="fas fa-info-circle"></i> Metryka dokumentu
+            </button>
         </div>
     </div>
 
-    <div class="card mt-4">
-        <div class="card-header bg-light">
-            <h5 class="mb-0">Metryka dokumentu</h5>
-        </div>
-        <div class="card-body">
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <th class="bg-light" style="width: 200px">Data utworzenia:</th>
-                        <td>{{ $category->created_at ? $category->created_at->format('d.m.Y H:i') : 'Brak danych' }}</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Utworzył:</th>
-                        <td>{{ $category->creator->name ?? 'Brak danych' }}</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Data ostatniej modyfikacji:</th>
-                        <td>{{ $category->updated_at ? $category->updated_at->format('d.m.Y H:i') : 'Brak danych' }}</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Ostatnio modyfikował:</th>
-                        <td>{{ $category->updater->name ?? 'Brak danych' }}</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Liczba zmian:</th>
-                        <td>{{ $category->changes_count }}</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Liczba odwiedzin:</th>
-                        <td>{{ $category->visits_count }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#historyModal">
-                Rejestr zmian
-            </button>
-            <div class="card mt-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Statystyki odwiedzin</h5>
+    <!-- Modal z metryką dokumentu -->
+    <div class="modal fade" id="metadataModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Metryka dokumentu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="card-body">
-                    <div id="visitsChart" style="height: 300px;"></div>
+                <div class="modal-body">
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <th class="bg-light" style="width: 200px">Data utworzenia:</th>
+                                <td>{{ $category->created_at ? $category->created_at->format('d.m.Y H:i') : 'Brak danych' }}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Utworzył:</th>
+                                <td>{{ $category->creator->name ?? 'Brak danych' }}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Data ostatniej modyfikacji:</th>
+                                <td>{{ $category->updated_at ? $category->updated_at->format('d.m.Y H:i') : 'Brak danych' }}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Ostatnio modyfikował:</th>
+                                <td>{{ $category->updater->name ?? 'Brak danych' }}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Liczba zmian:</th>
+                                <td>{{ $category->changes_count }}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Liczba odwiedzin:</th>
+                                <td>{{ $category->visits_count }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#historyModal">
+                        Rejestr zmian
+                    </button>
+                    
+                    <div class="card mt-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Statystyki odwiedzin</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="visitsChart" style="height: 300px;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

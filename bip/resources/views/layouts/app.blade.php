@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Biuletyn Informacji Publicznej</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -10,6 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
     <script src="https://cdn.tiny.cloud/1/cnz8bjladd3d6xpxjdsc305h8oukukqwqcdswx4zxds5mp8a/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="{{ asset('js/category-sort.js') }}"></script>
 </head>
 <body>
     
@@ -86,16 +89,54 @@
         <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
     @endif
 
-    <div class="container mt-4">
+    <div class="container-fluid mt-4">
         <div class="row">
-            <div class="col-3">
-                @include('partials.sidebar', ['categories' => \App\Models\Category::with('children')->whereNull('parent_id')->get()])
+            <!-- Sidebar pozostaje taki sam -->
+            <div class="col-md-3 ps-4" style="max-width: 300px;">
+                @include('partials.sidebar', ['categories' => \App\Models\Category::mainCategories()])
             </div>
-            <div class="col-9">
+            
+            <!-- Główna treść -->
+            <div class="col-md-7 px-4">
                 @yield('content')
+            </div>
+            
+            <!-- Szersze aktualności -->
+            <div class="col-md-2 pe-4" style="max-width: 250px;">
+                <div class="card">
+                    <div class="card-header bg-danger text-white py-2">
+                        <h6 class="mb-0 text-center">
+                            <i class="fas fa-bullhorn me-1"></i>
+                            Aktualności
+                        </h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            @foreach($announcements ?? [] as $announcement)
+                                <div class="list-group-item py-2 px-2">
+                                    <h6 class="mb-1 small">{{ Str::limit($announcement->title, 40) }}</h6>
+                                    <p class="mb-1 text-muted small">
+                                        <i class="fas fa-calendar-alt me-1"></i>
+                                        {{ $announcement->created_at->format('d.m.Y') }}
+                                    </p>
+                                    <a href="{{ route('announcements.show', $announcement) }}" 
+                                    class="btn btn-sm btn-outline-danger w-100 mt-1">
+                                        Czytaj więcej
+                                    </a>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="card-footer p-2 text-center">
+                            <a href="{{ route('announcements.index') }}" class="btn btn-sm btn-danger w-100">
+                                Wszystkie aktualności
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>

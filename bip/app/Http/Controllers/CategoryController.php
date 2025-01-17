@@ -10,6 +10,8 @@ use App\Models\CategoryVisit;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Setting;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+DB::enableQueryLog();
 
 class CategoryController extends Controller
 {
@@ -24,12 +26,14 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = Category::with('children')
+        $categories = Category::with(['children' => function($query) {
+                $query->orderBy('display_order', 'asc');
+            }])
             ->whereNull('parent_id')
+            ->orderBy('display_order', 'asc')
             ->get();
         
-        // Dodajemy breadcrumbs dla strony głównej
-        $breadcrumbs = [];  // Pusta tablica, bo jesteśmy na stronie głównej
+        $breadcrumbs = [];
         
         return view('categories.index', compact('categories', 'breadcrumbs'));
     }
@@ -294,5 +298,100 @@ class CategoryController extends Controller
             'dailyData',
             'hourlyData'
         ));
+    }
+    public function reorder(Request $request)
+    {
+        \DB::beginTransaction();
+        
+        try {
+            $categoryId = $request->categoryId;
+            $newPosition = $request->newPosition;
+            $newParentId = $request->parentId;
+            
+            \Log::info('Otrzymane dane:', [
+                'categoryId' => $categoryId,
+                'newPosition' => $newPosition,
+                'newParentId' => $newParentId
+            ]);
+
+            $category = Category::findOrFail($categoryId);
+            
+            // Jeśli zmienia się parent_id lub jest to kategoria główna (null parent_id)
+            if ($newParentId !== $category->parent_id || $category->parent_id === null) {
+                // Zmniejsz pozycję wszystkich elementów w starym rodzicu/poziomie
+                $query = Category::query();
+                if ($category->parent_id === null) {
+                    $query->whereNull('parent_id');
+                } else {
+                    $query->where('parent_id', $category->parent_id);
+                }
+                $query->where('display_order', '>', $category->display_order)
+                    ->decrement('display_order');
+
+                // Zwiększ pozycję elementów w nowym rodzicu/poziomie
+                $query = Category::query();
+                if ($newParentId === null) {
+                    $query->whereNull('parent_id');
+                } else {
+                    $query->where('parent_id', $newParentId);
+                }
+                $query->where('display_order', '>=', $newPosition)
+                    ->increment('display_order');
+
+                $category->parent_id = $newParentId;
+                $category->display_order = $newPosition;
+                $category->save();
+            } else {
+                // Jeśli przesuwamy w tym samym poziomie
+                if ($category->display_order < $newPosition) {
+                    // Przesuwanie w dół
+                    Category::where('parent_id', $category->parent_id)
+                        ->where('display_order', '>', $category->display_order)
+                        ->where('display_order', '<=', $newPosition)
+                        ->decrement('display_order');
+                } else {
+                    // Przesuwanie w górę
+                    Category::where('parent_id', $category->parent_id)
+                        ->where('display_order', '>=', $newPosition)
+                        ->where('display_order', '<', $category->display_order)
+                        ->increment('display_order');
+                }
+                
+                $category->display_order = $newPosition;
+                $category->save();
+            }
+
+            // Napraw numerację dla odpowiedniego poziomu
+            $query = Category::query();
+            if ($category->parent_id === null) {
+                $query->whereNull('parent_id');
+            } else {
+                $query->where('parent_id', $category->parent_id);
+            }
+            
+            $categories = $query->orderBy('display_order')->get();
+            
+            foreach($categories as $index => $cat) {
+                if ($cat->display_order !== $index) {
+                    $cat->update(['display_order' => $index]);
+                }
+            }
+
+            \DB::commit();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Kolejność zaktualizowana'
+            ]);
+            
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            \Log::error('Błąd podczas zmiany kolejności: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

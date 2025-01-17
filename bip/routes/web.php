@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RssController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StatisticsController;
+use App\Http\Controllers\AnnouncementController;
 
 Route::get('/', [CategoryController::class, 'index']);
 Route::resource('categories', CategoryController::class);
@@ -56,3 +57,20 @@ Route::get('/statistics', [CategoryController::class, 'statistics'])->name('stat
 Route::post('/categories/update-order', [CategoryController::class, 'updateOrder'])
     ->name('categories.updateOrder')
     ->middleware('auth');
+
+Route::post('/admin/categories/reorder', [CategoryController::class, 'reorder'])
+    ->name('categories.reorder')
+    ->middleware('auth');
+
+    // Routy publiczne dla aktualności
+Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
+Route::get('/announcements/{announcement}', [AnnouncementController::class, 'show'])->name('announcements.show');
+
+// Routy administracyjne dla aktualności (wymagają autoryzacji)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/announcements/create', [AnnouncementController::class, 'create'])->name('announcements.create');
+    Route::post('/admin/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
+    Route::get('/admin/announcements/{announcement}/edit', [AnnouncementController::class, 'edit'])->name('announcements.edit');
+    Route::put('/admin/announcements/{announcement}', [AnnouncementController::class, 'update'])->name('announcements.update');
+    Route::delete('/admin/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
+});

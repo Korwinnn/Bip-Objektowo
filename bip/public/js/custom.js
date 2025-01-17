@@ -447,3 +447,88 @@ window.addEventListener('resize', function() {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryList = document.getElementById('sortable-categories');
+    
+    if (categoryList) {
+        // Dla głównych kategorii
+        new Sortable(categoryList, {
+            handle: '.drag-handle',
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            dragClass: 'sortable-drag',
+            onEnd: function(evt) {
+                const item = evt.item;
+                const newIndex = Array.from(evt.to.children).indexOf(item);
+                const parentList = evt.to;
+                const parentId = parentList.getAttribute('data-parent');
+                
+                fetch('/admin/categories/reorder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        categoryId: item.getAttribute('data-id'),
+                        newPosition: newIndex,
+                        parentId: parentId || null
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('✅ Kolejność zaktualizowana pomyślnie');
+                    } else {
+                        console.error('❌ Błąd podczas aktualizacji:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ Błąd podczas wysyłania żądania:', error);
+                });
+            }
+        });
+
+        // Dla podkategorii
+        document.querySelectorAll('.subcategory-list').forEach(list => {
+            new Sortable(list, {
+                handle: '.drag-handle',
+                animation: 150,
+                group: 'nested',
+                ghostClass: 'sortable-ghost',
+                dragClass: 'sortable-drag',
+                onEnd: function(evt) {
+                    const item = evt.item;
+                    const newIndex = Array.from(evt.to.children).indexOf(item);
+                    const parentList = evt.to;
+                    const parentId = parentList.getAttribute('data-parent');
+
+                    fetch('/admin/categories/reorder', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            categoryId: item.getAttribute('data-id'),
+                            newPosition: newIndex,
+                            parentId: parentId || null
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log('✅ Kolejność zaktualizowana pomyślnie');
+                        } else {
+                            console.error('❌ Błąd podczas aktualizacji:', data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('❌ Błąd podczas wysyłania żądania:', error);
+                    });
+                }
+            });
+        });
+    }
+});
