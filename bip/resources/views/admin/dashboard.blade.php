@@ -50,21 +50,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach(\App\Models\User::all() as $user)
+                            @foreach(\App\Models\User::all() as $user)
                                 <tr>
                                     <td>{{ $user->username }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>
                                         @if(Auth::user()->is_admin)
-                                            {{-- Admin widzi wszystkie akcje dla wszystkich użytkowników (oprócz usuwania siebie) --}}
                                             <a href="{{ route('users.edit', $user) }}" class="btn btn-danger btn-sm">
                                                 <i class="fas fa-edit"></i> Edytuj
                                             </a>
-                                            <a href="{{ route('users.change-password', $user) }}" class="btn btn-primary btn-sm">
+                                            <!-- Tutaj zmień link do zmiany hasła -->
+                                            <a href="{{ route('users.change-password', ['user' => $user->id]) }}" class="btn btn-primary btn-sm">
                                                 <i class="fas fa-key"></i> Zmień hasło
                                             </a>
-                                            @if(!$user->is_admin) {{-- Admina nie można usunąć --}}
+                                            @if(!$user->is_admin)
                                                 <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
@@ -75,12 +75,11 @@
                                                 </form>
                                             @endif
                                         @else
-                                            {{-- Zwykły użytkownik widzi tylko swoje akcje --}}
                                             @if($user->id === Auth::id())
                                                 <a href="{{ route('users.edit', $user) }}" class="btn btn-info btn-sm">
                                                     <i class="fas fa-edit"></i> Edytuj
                                                 </a>
-                                                <a href="{{ route('users.change-password') }}" class="btn btn-primary btn-sm">
+                                                <a href="{{ route('users.change-password', ['user' => Auth::id()]) }}" class="btn btn-primary btn-sm">
                                                     <i class="fas fa-key"></i> Zmień hasło
                                                 </a>
                                             @endif

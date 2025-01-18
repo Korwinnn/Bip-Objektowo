@@ -46,8 +46,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-    Route::get('/users/change-password', [UserController::class, 'showChangePasswordForm'])->name('users.change-password');
-    Route::post('/users/update-password', [UserController::class, 'changePassword'])->name('users.update-password');
+    // Trasy dla zmiany hasła
+    Route::get('/users/{user}/change-password', [UserController::class, 'showChangePasswordForm'])
+        ->name('users.change-password');
+    Route::post('/users/update-password', [UserController::class, 'changePassword'])
+        ->name('users.update-password');
+    // Trasa dla admina do zmiany hasła innych użytkowników
+    Route::post('/users/{user}/admin-change-password', [UserController::class, 'adminChangePassword'])
+        ->name('users.admin-change-password')
+        ->middleware('admin');
 });
 
 // Kategorie

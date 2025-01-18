@@ -80,9 +80,20 @@ class UserController extends Controller
         }
     }
 
-    public function showChangePasswordForm()
+    public function showChangePasswordForm(User $user = null)
     {
-        return view('admin.users.change-password');
+        // Jeśli nie podano użytkownika, używamy zalogowanego użytkownika
+        if (!$user) {
+            $user = auth()->user();
+        }
+        
+        // Sprawdzamy uprawnienia
+        if (!auth()->user()->is_admin && auth()->id() !== $user->id) {
+            return redirect()->route('admin.dashboard')
+                ->with('error', 'Nie masz uprawnień do tej akcji.');
+        }
+
+        return view('admin.users.change-password', compact('user'));
     }
 
     public function changePassword(Request $request)
@@ -216,5 +227,26 @@ class UserController extends Controller
 
         return redirect()->route('admin.dashboard')
             ->with('success', 'Dane użytkownika zostały zaktualizowane.');
+    }
+    public function adminChangePassword(Request $request, User $user)
+    {
+        if (!auth()->user()->is_admin) {
+            return back()->with('error', 'Nie masz uprawnień do tej akcji.');
+        }
+
+        $request->validate([
+            'password' => 'required|min:8|confirmed',
+        ], [
+            'password.required' => 'Nowe hasło jest wymagane',
+            'password.min' => 'Hasło musi mieć minimum 8 znaków',
+            'password.confirmed' => 'Hasła nie są identyczne',
+        ]);
+
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        return redirect()->route('admin.dashboard')
+            ->with('success', 'Hasło użytkownika zostało zmienione pomyślnie.');
     }
 }
