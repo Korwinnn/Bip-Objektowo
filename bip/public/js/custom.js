@@ -39,12 +39,13 @@ document.addEventListener('DOMContentLoaded', function() {
 // Stałe
 const DEFAULT_FONT_SIZE = 16;
 const MAX_FONT_SIZE = DEFAULT_FONT_SIZE * 2;
+const MIN_FONT_SIZE = DEFAULT_FONT_SIZE;
 
 // Aplikuj zapisane ustawienia przy starcie
 document.addEventListener('DOMContentLoaded', function() {
     const savedFontSize = localStorage.getItem('userFontSize');
     if (savedFontSize) {
-        document.documentElement.style.fontSize = savedFontSize + 'px';
+        document.documentElement.style.fontSize = savedFontSize;
         updateFontSizeButtons();
     }
 
@@ -62,35 +63,17 @@ function updateFontSizeButtons() {
     
     if (sizeUpBtn) {
         sizeUpBtn.disabled = currentSize >= MAX_FONT_SIZE;
-        if (currentSize >= MAX_FONT_SIZE) {
-            sizeUpBtn.style.setProperty('color', 'currentColor', 'important');
-            sizeUpBtn.style.setProperty('opacity', '0.5', 'important');
-            sizeUpBtn.style.setProperty('background', 'none', 'important');
-        } else {
-            sizeUpBtn.style.removeProperty('color');
-            sizeUpBtn.style.removeProperty('opacity');
-            sizeUpBtn.style.removeProperty('background');
-        }
     }
+    
     if (sizeDownBtn) {
-        sizeDownBtn.disabled = currentSize <= DEFAULT_FONT_SIZE;
-        if (currentSize <= DEFAULT_FONT_SIZE) {
-            sizeDownBtn.style.setProperty('color', 'currentColor', 'important');
-            sizeDownBtn.style.setProperty('opacity', '0.5', 'important');
-            sizeDownBtn.style.setProperty('background', 'none', 'important');
-        } else {
-            sizeDownBtn.style.removeProperty('color');
-            sizeDownBtn.style.removeProperty('opacity');
-            sizeDownBtn.style.removeProperty('background');
-        }
+        sizeDownBtn.disabled = currentSize <= MIN_FONT_SIZE;
     }
-}   
+} 
 
 function changeFontSizeUp() {
     const currentSize = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
-    const newSize = currentSize * 1.2;
-    
-    if (newSize <= MAX_FONT_SIZE) {
+    if (currentSize < MAX_FONT_SIZE) {
+        const newSize = Math.min(currentSize * 1.1, MAX_FONT_SIZE);
         document.documentElement.style.fontSize = newSize + 'px';
         localStorage.setItem('userFontSize', newSize + 'px');
         updateFontSizeButtons();
@@ -99,9 +82,8 @@ function changeFontSizeUp() {
 
 function changeFontSizeDown() {
     const currentSize = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
-    const newSize = currentSize * 0.8;
-    
-    if (newSize >= DEFAULT_FONT_SIZE) {
+    if (currentSize > MIN_FONT_SIZE) {
+        const newSize = Math.max(currentSize * 0.9, MIN_FONT_SIZE);
         document.documentElement.style.fontSize = newSize + 'px';
         localStorage.setItem('userFontSize', newSize + 'px');
         updateFontSizeButtons();
