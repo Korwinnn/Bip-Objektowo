@@ -1189,67 +1189,79 @@
         min-width: calc(100% - 550px); /* 550px to suma szerokości sidebara i aktualności */
     }
 }
+.floating-accessibility-btn {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.floating-accessibility-btn:hover {
+    transform: scale(1.1);
+    background-color: #c82333;
+}
+
+.floating-accessibility-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.5);
+}
+
+.floating-accessibility-btn i {
+    font-size: 24px;
+}
+
 .accessibility-panel {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    position: fixed;
+    right: 80px; /* odsunięte od przycisku */
+    bottom: 20px;
     background: white;
     border: 1px solid #dee2e6;
-    border-radius: 4px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    z-index: 1000;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
     padding: 15px;
-    margin-top: 5px;
+    z-index: 999;
+    display: none;
     width: auto;
     white-space: nowrap;
 }
 
 .accessibility-panel.show {
     display: block;
-    animation: fadeIn 0.3s ease;
+    animation: slideIn 0.3s ease;
 }
 
-.accessibility-controls {
-    display: flex;
-    gap: 2px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-#accessibility-toggle {
-    position: relative;
-}
-
-#accessibility-toggle:hover {
-    background-color: #c82333;
-}
-
-@keyframes fadeIn {
+@keyframes slideIn {
     from {
         opacity: 0;
-        transform: translate(-50%, -10px);
+        transform: translateX(20px);
     }
     to {
         opacity: 1;
-        transform: translate(-50%, 0);
+        transform: translateX(0);
     }
 }
 
-/* Style dla mobilnych urządzeń */
+/* Responsywność dla mobile */
 @media (max-width: 768px) {
     .accessibility-panel {
-        position: fixed;
-        top: auto;
-        bottom: 0;
-        left: 0;
         right: 0;
-        transform: none;
-        width: 100%;
-        border-radius: 10px 10px 0 0;
-        padding: 20px;
-        max-height: 80vh;
+        left: 0;
+        bottom: 80px; /* miejsce na przycisk */
+        width: 90%;
+        margin: 0 auto;
+        max-height: 60vh;
         overflow-y: auto;
     }
 
@@ -1262,4 +1274,28 @@
         width: 100%;
         justify-content: center;
     }
+
+    .floating-accessibility-btn {
+        width: 45px;
+        height: 45px;
+        right: 15px;
+        bottom: 15px;
+    }
+}
+
+/* Dodaj efekt pulsowania dla przycisku */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+    }
+}
+
+.floating-accessibility-btn {
+    animation: pulse 2s infinite;
 }

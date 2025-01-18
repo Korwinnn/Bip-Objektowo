@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const panel = document.getElementById('accessibility-panel');
     
     if (toggleButton && panel) {
-        toggleButton.addEventListener('click', function() {
+        toggleButton.addEventListener('click', function(e) {
+            e.stopPropagation();
             panel.classList.toggle('show');
             const isExpanded = panel.classList.contains('show');
             toggleButton.setAttribute('aria-expanded', isExpanded);
@@ -26,6 +27,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 panel.classList.remove('show');
                 toggleButton.setAttribute('aria-expanded', 'false');
             }
+        });
+
+        // Zapobiegaj zamykaniu panelu przy kliknięciu wewnątrz niego
+        panel.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
     }
 });
