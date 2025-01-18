@@ -1,3 +1,35 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleButton = document.getElementById('accessibility-toggle');
+    const panel = document.getElementById('accessibility-panel');
+    
+    if (toggleButton && panel) {
+        toggleButton.addEventListener('click', function() {
+            panel.classList.toggle('show');
+            const isExpanded = panel.classList.contains('show');
+            toggleButton.setAttribute('aria-expanded', isExpanded);
+        });
+
+        // Zamykanie panelu po kliknięciu poza nim
+        document.addEventListener('click', function(event) {
+            const isClickInside = panel.contains(event.target) || 
+                                toggleButton.contains(event.target);
+            
+            if (!isClickInside && panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                toggleButton.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Obsługa klawisza Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                toggleButton.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+});
+
 // Stałe
 const DEFAULT_FONT_SIZE = 16;
 const MAX_FONT_SIZE = DEFAULT_FONT_SIZE * 2;

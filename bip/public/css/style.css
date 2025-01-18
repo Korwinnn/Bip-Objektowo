@@ -1189,3 +1189,77 @@
         min-width: calc(100% - 550px); /* 550px to suma szerokości sidebara i aktualności */
     }
 }
+.accessibility-panel {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+    padding: 15px;
+    margin-top: 5px;
+    width: auto;
+    white-space: nowrap;
+}
+
+.accessibility-panel.show {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.accessibility-controls {
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#accessibility-toggle {
+    position: relative;
+}
+
+#accessibility-toggle:hover {
+    background-color: #c82333;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+/* Style dla mobilnych urządzeń */
+@media (max-width: 768px) {
+    .accessibility-panel {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transform: none;
+        width: 100%;
+        border-radius: 10px 10px 0 0;
+        padding: 20px;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .accessibility-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .accessibility-controls span {
+        width: 100%;
+        justify-content: center;
+    }
+}
