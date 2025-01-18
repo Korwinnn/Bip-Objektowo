@@ -41,13 +41,14 @@ class AnnouncementController extends Controller
             'title' => 'required|max:255',
             'content' => 'required',
             'is_important' => 'boolean',
-            'publish_at' => 'nullable|date',
-            'expire_at' => 'nullable|date|after:publish_at'
+            'expire_at' => 'nullable|date'
         ]);
 
-        $announcement = new Announcement($validated);
-        $announcement->created_by = auth()->id();
-        $announcement->save();
+        $validated['is_important'] = $request->has('is_important');
+        $validated['publish_at'] = now(); // Automatycznie ustawiamy datę publikacji
+        $validated['created_by'] = auth()->id();
+
+        $announcement = Announcement::create($validated);
 
         return redirect()
             ->route('announcements.index')
@@ -65,13 +66,14 @@ class AnnouncementController extends Controller
             'title' => 'required|max:255',
             'content' => 'required',
             'is_important' => 'boolean',
-            'publish_at' => 'nullable|date',
-            'expire_at' => 'nullable|date|after:publish_at'
+            'expire_at' => 'nullable|date'
         ]);
 
-        $announcement->fill($validated);
-        $announcement->updated_by = auth()->id();
-        $announcement->save();
+        // Poprawna obsługa checkboxa
+        $validated['is_important'] = $request->has('is_important');
+        $validated['updated_by'] = auth()->id();
+
+        $announcement->update($validated);
 
         return redirect()
             ->route('announcements.show', $announcement)

@@ -31,10 +31,6 @@
     </div>
     <div class="card-body">
         <div class="mb-4">
-            <p class="text-muted">
-                <i class="fas fa-calendar-alt me-2"></i>
-                Dodano: {{ $announcement->created_at->format('d.m.Y H:i') }}
-            </p>
             @if($announcement->publish_at)
                 <p class="text-muted">
                     <i class="fas fa-clock me-2"></i>

@@ -49,16 +49,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="publish_at" class="form-label">Data publikacji</label>
-                <input type="datetime-local" 
-                       class="form-control" 
-                       id="publish_at" 
-                       name="publish_at" 
-                       value="{{ old('publish_at') }}">
-            </div>
-
-            <div class="mb-3">
-                <label for="expire_at" class="form-label">Data wygaśnięcia</label>
+                <label for="expire_at" class="form-label">Data wygaśnięcia (opcjonalnie)</label>
                 <input type="datetime-local" 
                        class="form-control" 
                        id="expire_at" 

@@ -41,7 +41,6 @@
                            type="checkbox" 
                            id="is_important" 
                            name="is_important" 
-                           value="1" 
                            {{ old('is_important', $announcement->is_important) ? 'checked' : '' }}>
                     <label class="form-check-label" for="is_important">
                         Ważne ogłoszenie
@@ -50,16 +49,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="publish_at" class="form-label">Data publikacji</label>
-                <input type="datetime-local" 
-                       class="form-control" 
-                       id="publish_at" 
-                       name="publish_at" 
-                       value="{{ old('publish_at', $announcement->publish_at ? $announcement->publish_at->format('Y-m-d\TH:i') : '') }}">
-            </div>
-
-            <div class="mb-3">
-                <label for="expire_at" class="form-label">Data wygaśnięcia</label>
+                <label for="expire_at" class="form-label">Data wygaśnięcia (opcjonalnie)</label>
                 <input type="datetime-local" 
                        class="form-control" 
                        id="expire_at" 

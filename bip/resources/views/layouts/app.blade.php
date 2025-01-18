@@ -120,7 +120,7 @@
                                         {{ $announcement->created_at->format('d.m.Y') }}
                                     </p>
                                     <a href="{{ route('announcements.show', $announcement) }}" 
-                                    class="btn btn-sm btn-outline-danger w-100 mt-1">
+                                    class="btn btn-sm btn-outline-danger w-100 mt-1" style="border-right:1px solid red">
                                         Czytaj więcej
                                     </a>
                                 </div>

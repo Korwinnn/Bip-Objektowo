@@ -31,7 +31,7 @@
                         <p class="mb-1">{{ Str::limit($announcement->content, 200) }}</p>
                         <div class="mt-2">
                             <a href="{{ route('announcements.show', $announcement) }}" 
-                               class="btn btn-sm btn-primary">
+                               class="btn btn-sm btn-primary" style="">
                                 Czytaj więcej
                             </a>
                             @auth
