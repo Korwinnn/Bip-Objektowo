@@ -34,6 +34,11 @@
                             </div>
                         </div>
                         <button type="submit" class="btn btn-sm btn-danger w-100">Zaloguj</button>
+                        <div class="mb-3">
+                            <a href="{{ route('password.request') }}" class="text-danger">
+                                Zapomniałeś hasła?
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>

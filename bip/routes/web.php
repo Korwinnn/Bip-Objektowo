@@ -9,6 +9,7 @@ use App\Http\Controllers\RssController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\ContactController;
 
 Route::get('/', [CategoryController::class, 'index']);
 Route::resource('categories', CategoryController::class);
@@ -73,4 +74,24 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/announcements/{announcement}/edit', [AnnouncementController::class, 'edit'])->name('announcements.edit');
     Route::put('/admin/announcements/{announcement}', [AnnouncementController::class, 'update'])->name('announcements.update');
     Route::delete('/admin/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/contacts/edit', [ContactController::class, 'edit'])->name('contacts.edit');
+    Route::put('/admin/contacts', [ContactController::class, 'update'])->name('contacts.update');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/users/change-password', [UserController::class, 'showChangePasswordForm'])->name('users.change-password');
+    Route::post('/users/change-password', [UserController::class, 'changePassword'])->name('users.update-password');
+});
+
+Route::get('/forgot-password', [UserController::class, 'showForgotForm'])->name('password.request');
+Route::post('/forgot-password', [UserController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [UserController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [UserController::class, 'resetPassword'])->name('password.update');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
 });

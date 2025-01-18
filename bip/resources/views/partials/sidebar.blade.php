@@ -108,7 +108,6 @@
 .category-item, .subcategory-item {
     list-style: none;
     padding: 0.5rem;
-    background: #fff;
     border-radius: 4px;
     transition: background-color 0.2s;
 }
