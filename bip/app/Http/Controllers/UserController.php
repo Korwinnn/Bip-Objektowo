@@ -49,6 +49,14 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        if (!auth()->user()->is_admin) {
+            return back()->with('error', 'Nie masz uprawnień do tej akcji.');
+        }
+
+        if ($user->is_admin) {
+            return back()->with('error', 'Nie można usunąć administratora.');
+        }
+
         if ($user->id === auth()->id()) {
             return back()->with('error', 'Nie można usunąć własnego konta.');
         }
@@ -56,14 +64,12 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
 
-            // Ustawiamy NULL dla created_by i updated_by w kategoriach
             Category::where('created_by', $user->id)
                 ->update(['created_by' => null]);
             
             Category::where('updated_by', $user->id)
                 ->update(['updated_by' => null]);
 
-            // Usuń użytkownika
             $user->delete();
 
             DB::commit();
@@ -73,10 +79,11 @@ class UserController extends Controller
             return back()->with('error', 'Wystąpił błąd podczas usuwania użytkownika.');
         }
     }
+
     public function showChangePasswordForm()
-{
-    return view('admin.users.change-password');
-}
+    {
+        return view('admin.users.change-password');
+    }
 
     public function changePassword(Request $request)
     {
@@ -90,13 +97,15 @@ class UserController extends Controller
             'password.confirmed' => 'Hasła nie są identyczne',
         ]);
 
-        if (!Hash::check($request->current_password, auth()->user()->password)) {
+        $user = auth()->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
             return back()->withErrors([
                 'current_password' => 'Aktualne hasło jest nieprawidłowe',
             ]);
         }
 
-        auth()->user()->update([
+        $user->update([
             'password' => Hash::make($request->password)
         ]);
 
@@ -175,11 +184,19 @@ class UserController extends Controller
     }
     public function edit(User $user)
     {
+        if (!auth()->user()->is_admin && auth()->id() !== $user->id) {
+            return redirect()->route('admin.dashboard')
+                ->with('error', 'Nie masz uprawnień do tej akcji.');
+        }
         return view('admin.users.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)
     {
+        if (!auth()->user()->is_admin && auth()->id() !== $user->id) {
+            return redirect()->route('admin.dashboard')
+                ->with('error', 'Nie masz uprawnień do tej akcji.');
+        }
         $request->validate([
             'username' => 'required|unique:users,username,' . $user->id,
             'email' => 'required|email|unique:users,email,' . $user->id,

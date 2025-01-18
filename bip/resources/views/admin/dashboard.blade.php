@@ -56,23 +56,34 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>
-                                        @if($user->id === Auth::id())
-                                            <a href="{{ route('users.change-password') }}" class="btn btn-primary btn-sm">
+                                        @if(Auth::user()->is_admin)
+                                            {{-- Admin widzi wszystkie akcje dla wszystkich użytkowników (oprócz usuwania siebie) --}}
+                                            <a href="{{ route('users.edit', $user) }}" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-edit"></i> Edytuj
+                                            </a>
+                                            <a href="{{ route('users.change-password', $user) }}" class="btn btn-primary btn-sm">
                                                 <i class="fas fa-key"></i> Zmień hasło
                                             </a>
-                                        @endif
-                                        <a href="{{ route('users.edit', $user) }}" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-edit"></i> Edytuj dane
-                                        </a>
-                                        @if($user->id !== Auth::id())
-                                            <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" 
-                                                        onclick="return confirm('Czy na pewno chcesz usunąć tego użytkownika?')">
-                                                    <i class="fas fa-trash"></i> Usuń
-                                                </button>
-                                            </form>
+                                            @if(!$user->is_admin) {{-- Admina nie można usunąć --}}
+                                                <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm" 
+                                                            onclick="return confirm('Czy na pewno chcesz usunąć tego użytkownika?')">
+                                                        <i class="fas fa-trash"></i> Usuń
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @else
+                                            {{-- Zwykły użytkownik widzi tylko swoje akcje --}}
+                                            @if($user->id === Auth::id())
+                                                <a href="{{ route('users.edit', $user) }}" class="btn btn-info btn-sm">
+                                                    <i class="fas fa-edit"></i> Edytuj
+                                                </a>
+                                                <a href="{{ route('users.change-password') }}" class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-key"></i> Zmień hasło
+                                                </a>
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
