@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
             animation: 150,
             ghostClass: 'sortable-ghost',
             dragClass: 'sortable-drag',
-            group: 'nested',
-            filter: '.list-group, hr', // Ignoruj elementy, które nie powinny być sortowalne
+            group: 'categories', // Zmiana nazwy grupy
+            filter: '.list-group, hr',
             onEnd: function(evt) {
                 const item = evt.item;
                 
@@ -19,12 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Znajdź rzeczywisty index elementu wśród kategorii
                 const newIndex = categoryItems.indexOf(item);
-                
-                console.log('Wysyłanie danych dla głównej kategorii:', {
-                    categoryId: item.getAttribute('data-id'),
-                    newPosition: newIndex,
-                    parentId: null
-                });
 
                 fetch('/admin/categories/reorder', {
                     method: 'POST',
@@ -52,28 +46,33 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Inicjalizacja dla podkategorii (bez zmian)
+        // Inicjalizacja dla podkategorii
         document.querySelectorAll('.subcategory-list').forEach(list => {
             new Sortable(list, {
                 handle: '.drag-handle',
                 animation: 150,
-                group: 'nested',
+                group: {
+                    name: 'subcategories',
+                    put: function(to) {
+                        // Sprawdź czy element docelowy jest listą podkategorii
+                        return to.el.classList.contains('subcategory-list');
+                    }
+                },
                 ghostClass: 'sortable-ghost',
                 dragClass: 'sortable-drag',
                 filter: 'hr',
                 onEnd: function(evt) {
+                    // Upewnij się, że element został upuszczony w dozwolonym miejscu
+                    if (!evt.to.classList.contains('subcategory-list')) {
+                        return false;
+                    }
+
                     const item = evt.item;
                     const parentList = evt.to;
                     const categoryItems = Array.from(parentList.children)
                         .filter(el => el.classList.contains('subcategory-item'));
                     const newIndex = categoryItems.indexOf(item);
                     const parentId = parentList.getAttribute('data-parent');
-
-                    console.log('Wysyłanie danych dla podkategorii:', {
-                        categoryId: item.getAttribute('data-id'),
-                        newPosition: newIndex,
-                        parentId: parentId
-                    });
 
                     fetch('/admin/categories/reorder', {
                         method: 'POST',

@@ -160,7 +160,7 @@
     </footer>
 
     <!-- Floating Accessibility Button and Panel -->
-    <button id="accessibility-toggle" class="floating-accessibility-btn" aria-expanded="false">
+    <button id="accessibility-toggle" class="floating-accessibility-btn" aria-expanded="false" title="Ułatwienia Dostępu">
         <i class="fas fa-universal-access"></i>
     </button>
 

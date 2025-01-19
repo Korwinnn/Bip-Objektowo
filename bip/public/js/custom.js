@@ -104,8 +104,19 @@ function resetStyles() {
     
     const insLogo = document.getElementById('ins-logo');
     const bipLogo = document.getElementById('bip-logo');
-    if (insLogo) insLogo.style.display = 'block';
-    if (bipLogo) bipLogo.style.display = 'block';
+    const bipLogoMobile = document.getElementById('bip-logo-mobile');
+    
+    // Pokazujemy wszystkie wersje logo BIP
+    [insLogo, bipLogo, bipLogoMobile].forEach(logo => {
+        if (logo) logo.style.display = 'block';
+    });
+
+    // Przywróć czerwony kolor dla menu mobilnego
+    const sidebarToggle = document.querySelector('.sidebar-toggle');
+    if (sidebarToggle) {
+        sidebarToggle.style.setProperty('background-color', '#dc3545', 'important');
+        sidebarToggle.style.setProperty('color', 'white', 'important');
+    }
 
     // Reset wszystkich elementów poza kontrolkami dostępności
     const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls > *)');
@@ -185,11 +196,22 @@ function applyTheme(theme) {
 function applyContrastMode(bgColor, textColor, borderColor) {
     const insLogo = document.getElementById('ins-logo');
     const bipLogo = document.getElementById('bip-logo');
-    if (insLogo) insLogo.style.display = 'none';
-    if (bipLogo) bipLogo.style.display = 'none';
+    const bipLogoMobile = document.getElementById('bip-logo-mobile');
+    
+    // Ukrywamy wszystkie wersje logo BIP
+    [insLogo, bipLogo, bipLogoMobile].forEach(logo => {
+        if (logo) logo.style.display = 'none';
+    });
 
     document.documentElement.style.backgroundColor = bgColor;
     document.documentElement.style.color = textColor;
+
+    // Przywróć czerwony kolor dla menu mobilnego
+    const sidebarToggle = document.querySelector('.sidebar-toggle');
+    if (sidebarToggle) {
+        sidebarToggle.style.setProperty('background-color', '#dc3545', 'important');
+        sidebarToggle.style.setProperty('color', 'white', 'important');
+    }
 
     // Zastosuj style do wszystkich elementów poza kontrolkami dostępności
     const elements = document.querySelectorAll('*:not(.accessibility-controls):not(.accessibility-controls > *)');
@@ -202,7 +224,7 @@ function applyContrastMode(bgColor, textColor, borderColor) {
         }
     });
 
-    // Specjalna obsługa kart (metryka dokumentu i statystyki)
+    // Specjalna obsługa kart
     document.querySelectorAll('.card').forEach(card => {
         card.style.setProperty('background-color', bgColor, 'important');
         let header = card.querySelector('.card-header');
@@ -234,7 +256,6 @@ function applyContrastMode(bgColor, textColor, borderColor) {
         sidebar.style.setProperty('--before-color', borderColor);
     }
 }
-
 // Funkcje zmiany motywów
 function changeThemeGray() {
     const currentTheme = localStorage.getItem('userTheme');
@@ -242,6 +263,12 @@ function changeThemeGray() {
         resetStyles();
     } else {
         applyTheme('gray');
+        
+        // Zachowaj kolory dla elementów dostępności
+        const excludedElements = document.querySelectorAll('.accessibility-controls *, .floating-accessibility-btn, #accessibility-toggle, .sidebar-toggle');
+        excludedElements.forEach(element => {
+            element.style.filter = 'none';
+        });
     }
 }
 
@@ -397,7 +424,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Dodaj przycisk do przełączania menu
     const toggleButton = document.createElement('button');
     toggleButton.className = 'sidebar-toggle d-md-none';
-    toggleButton.innerHTML = '<i class="fas fa-bars"></i>';
+    toggleButton.innerHTML = '<i class="fas fa-bars" title = "Menu Kategorii"></i>';
     document.body.appendChild(toggleButton);
 
     // Dodaj overlay
